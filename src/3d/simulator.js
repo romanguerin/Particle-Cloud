@@ -49,7 +49,10 @@ function init(renderer) {
 
     _scene = new THREE.Scene();
     _camera = new THREE.Camera();
+    //camera postition
+
     _camera.position.z = 1;
+    //_camera.position.x = 5;
 
     _copyShader = new THREE.RawShaderMaterial({
         uniforms: {
@@ -120,6 +123,7 @@ function _updatePosition(dt) {
     _positionShader.uniforms.texturePosition.value = _positionRenderTarget2;
     _positionShader.uniforms.time.value += dt * 0.001;
     _renderer.render( _scene, _camera, _positionRenderTarget );
+    //console.log( _textureDefaultPosition);
 }
 
 function _createPositionTexture() {
@@ -171,16 +175,17 @@ function update(dt) {
         _positionShader.uniforms.curlSize.value = settings.curlSize;
         _positionShader.uniforms.attraction.value = settings.attraction;
         _positionShader.uniforms.initAnimation.value = exports.initAnimation;
-
+////////////////////////////////////////////////////////////
+        //follow mouse or not
         if(settings.followMouse) {
             _positionShader.uniforms.mouse3d.value.copy(settings.mouse3d);
-            //console.log(settings.mouse3d);
+
         } else {
             _followPointTime += dt * 0.001 * settings.speed;
             _followPoint.set(
                 Math.cos(_followPointTime) * r,
-                Math.cos(_followPointTime * 4.0) * h,
-                Math.sin(_followPointTime * 2.0) * r
+                Math.cos(_followPointTime * 2.1) * h, //4 change flow
+                Math.sin(_followPointTime * 1.2) * r //2 change flow
             );
             _positionShader.uniforms.mouse3d.value.lerp(_followPoint, 0.2);
         }

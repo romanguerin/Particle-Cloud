@@ -20,7 +20,7 @@ var amountMap = {
 };
 
 exports.amountList = keys(amountMap);
-query.amount = amountMap[query.amount] ? query.amount : '65k';
+query.amount = amountMap[query.amount] ? query.amount : '252k';
 var amountInfo = amountMap[query.amount];
 exports.simulatorTextureWidth = amountInfo[0];
 exports.simulatorTextureHeight = amountInfo[1];

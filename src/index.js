@@ -96,9 +96,12 @@ function init() {
     floor.mesh.position.y = -100;
     _scene.add(floor.mesh);
 
+     // max distance is between 250 and 1200
+    //_control.maxDistance = 1000;
+    //console.log(remapD);
     _control = new OrbitControls( _camera, _renderer.domElement );
     _control.target.y = 50;
-    _control.maxDistance = 1000;
+    //_control.maxDistance = remapD;
     _control.minPolarAngle = 0.3;
     _control.maxPolarAngle = Math.PI / 2 - 0.1;
     _control.noPan = true;
@@ -198,23 +201,21 @@ function _onKeyUp(evt) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////
                                     /*follow part*/
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+//just trydsad
+//window.setInterval(frame, 25);
 
-/*
-let performAnimation = function() {
-    requestAnimationFrame(performAnimation);
-    settings.mouse.x = remapX;
-    settings.mouse.y = remapY;
-    settings.followMouse = begin;
-};
-
-performAnimation();
-*/
-window.setInterval(frame, 5);
+function repeat() {
+    // Do whatever
+    frame();
+    requestAnimationFrame(repeat);
+}
+requestAnimationFrame(repeat);
 
 function frame(){
     settings.mouse.x = remapX;
     settings.mouse.y = remapY;
     settings.followMouse = begin;
+    settings.radius = camDis;
 }
 
 

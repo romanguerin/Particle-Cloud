@@ -9,10 +9,12 @@ let h; //height
 let d; //distance
 
 let ti = 0; //time reset
-let clean = 0; //
 
 let remapX;
 let remapY;
+let remapD = 1000;
+
+let camDis = 1.8;
 
 let begin = false;
 
@@ -27,8 +29,14 @@ let noseX = 0,
     rwristY = 0;
 
 
+//window.setInterval(position, 25);
 
-window.setInterval(position, 5);
+function repeat() {
+    // Do whatever
+    position();
+    requestAnimationFrame(repeat);
+}
+
 
 
 options = {
@@ -62,7 +70,8 @@ function setup() {
     });
     // Hide the video element, and just show the canvas
     video.hide();
-
+    //
+    requestAnimationFrame(repeat);
 }
 
 
@@ -114,17 +123,6 @@ function drawKeypoints()  {
                     //get middle area
                      w = noseX - (d/2);
                      h = noseY - (d/2);
-                    //draw
-
-                    //draw check if person is on a distance of 50 or more
-                   // if (d >= 40) {
-                        //fill(0, 0, 0, 0);
-                        //ellipse(lwristX, lwristY , d);
-                        //ellipse(rwristX, rwristY, d);
-                        //rect(w, h, d, d);
-                        //stroke(color[0]);
-                        //text(("distance: " + d), w, (h - 5));
-                    //}
                 }
             }
         }
@@ -135,32 +133,28 @@ function drawKeypoints()  {
 function position(){
     if (poses[0] === undefined) {
         ti += 1;
-        if (ti === 500) {
+        // if ti = 400 start own animation
+        if (ti === 400) {
             begin = false;
             ti = 0;
+            //camDis = lerp(camDis, 1.7, 0.05);
         }
-
     }
+    // if distance is bigger than 50 start tracing
     else if (d >= 50){
         begin = true;
         //update
         remap();
         transform();
     }
-
-    //clean code if poses is [0]
-    clean += 1;
-    if (clean === 300) {
-        console.clear();
-        clean = 0;
-    }
 }
-// need to do only after some time
+
 
 
 function remap(value, low1, high1, low2, high2) {
     return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }
+
 
 function transform() {
     let xTran = w / 10.24;
@@ -172,6 +166,11 @@ function transform() {
     //remapy
     remapY = remap(yTran,0,100,1,-1);
     //console.log("Y: "+ remapY);
+    remapD = remap(d,50,100, 0.2, 3);
+    camDis = lerp(camDis, remapD, 0.05);
+    camDis = Math.min(camDis, 3);
+    camDis = Math.round(camDis * 100)/100 ;
+    //frame();
 }
 
 
