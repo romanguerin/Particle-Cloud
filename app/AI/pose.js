@@ -4,8 +4,12 @@ let poses = [];
 let options;
 
 
-let w;
-let h;
+let w; //width
+let h; //height
+let d; //distance
+
+let ti = 0; //time reset
+let clean = 0; //
 
 let remapX;
 let remapY;
@@ -24,7 +28,8 @@ let noseX = 0,
 
 
 
-window.setInterval(position, 10);
+window.setInterval(position, 5);
+
 
 options = {
     imageScaleFactor: 0.3,
@@ -49,7 +54,7 @@ function setup() {
     video.size(width, height);
 
     // Create a new poseNet method with a single detection
-    poseNet = ml5.poseNet(video, options, modelReady);
+    poseNet = ml5.poseNet(video, options);
     // This sets up an event that fills the global variable "poses"
     // with an array every time new poses are detected
     poseNet.on('pose', function(results) {
@@ -60,10 +65,6 @@ function setup() {
 
 }
 
-
-function modelReady() {
-    select('#status').html('Model Loaded');
-}
 
 function draw() {
     image(video, 0, 0, width, height);
@@ -109,7 +110,7 @@ function drawKeypoints()  {
                 // Only draw an ellipse is the pose probability is bigger than 0.2
                 if (keypoint.score > 0.05) {
                     //distance math round
-                    let d = Math.round(dist(noseX, noseY, eyelX, eyelY) * 3);
+                    d = Math.round(dist(noseX, noseY, eyelX, eyelY) * 3);
                     //get middle area
                      w = noseX - (d/2);
                      h = noseY - (d/2);
@@ -132,18 +133,29 @@ function drawKeypoints()  {
 
 //track position
 function position(){
-    if (poses[0].pose.keypoints[0].position.x === undefined) {
-    begin = false;
+    if (poses[0] === undefined) {
+        ti += 1;
+        if (ti === 500) {
+            begin = false;
+            ti = 0;
+        }
+
     }
-    else {
-        //console.log(yPos);
+    else if (d >= 50){
         begin = true;
         //update
         remap();
         transform();
     }
-}
 
+    //clean code if poses is [0]
+    clean += 1;
+    if (clean === 300) {
+        console.clear();
+        clean = 0;
+    }
+}
+// need to do only after some time
 
 
 function remap(value, low1, high1, low2, high2) {

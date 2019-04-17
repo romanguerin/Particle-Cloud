@@ -35,11 +35,12 @@ exports.curlSize = 0.02;
 exports.attraction = 1;
 exports.shadowDarkness = 0.45;
 
-exports.bgColor = '#343434';
-exports.color1 = '#ffffff';
-exports.color2 = '#ffffff';
+// start collor
+exports.bgColor = '#ffffff';
+exports.color1 = '#0087ff';
+exports.color2 = '#bdeef5';
 
-exports.fxaa = false;
+exports.fxaa = true;
 var motionBlurQualityMap = exports.motionBlurQualityMap = {
     best: 1,
     high: 0.5,
@@ -47,7 +48,7 @@ var motionBlurQualityMap = exports.motionBlurQualityMap = {
     low: 0.25
 };
 exports.motionBlurQualityList = keys(motionBlurQualityMap);
-query.motionBlurQuality = motionBlurQualityMap[query.motionBlurQuality] ? query.motionBlurQuality : 'medium';
+query.motionBlurQuality = motionBlurQualityMap[query.motionBlurQuality] ? query.motionBlurQuality : 'best';
 exports.motionBlur = true;
 exports.motionBlurPause = false;
 exports.bloom = true;

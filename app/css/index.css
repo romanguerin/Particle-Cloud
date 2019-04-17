@@ -19,9 +19,14 @@ html, body,
 .footer, .footer * {
     box-sizing: border-box;
 }
-.dg .c .selector {
+.dg .c  .selector {
     transform: translate(0, -1px);
 }
+
+.dg.ac {
+    display: none;
+}
+
 
 .mobile {
     display: none;
@@ -55,7 +60,6 @@ html, body,
     margin-left: -169px;
     margin-top: -51px;
     background-size: 338px 102px;
-    background-image: url(../images/logo.png);
     pointer-events: none;
     opacity: 0;
 }

@@ -195,14 +195,28 @@ function _onKeyUp(evt) {
         settings.dieSpeed = settings.dieSpeed === 0 ? 0.015 : 0;
     }
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+                                    /*follow part*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-window.setInterval(test, 10);
-function test(){
+/*
+let performAnimation = function() {
+    requestAnimationFrame(performAnimation);
     settings.mouse.x = remapX;
     settings.mouse.y = remapY;
- //console.log("works"+remapX);
+    settings.followMouse = begin;
+};
+
+performAnimation();
+*/
+window.setInterval(frame, 5);
+
+function frame(){
+    settings.mouse.x = remapX;
+    settings.mouse.y = remapY;
     settings.followMouse = begin;
 }
+
 
 function _onResize() {
     _width = window.innerWidth;
