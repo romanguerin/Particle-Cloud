@@ -32,6 +32,7 @@ exports.speed = 1;
 exports.dieSpeed = 0.015;
 exports.radius = amountInfo[2];
 exports.curlSize = 0.02;
+//atraction is in here as default
 exports.attraction = 1;
 exports.shadowDarkness = 0.45;
 

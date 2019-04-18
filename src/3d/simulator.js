@@ -173,10 +173,17 @@ function update(dt) {
         _positionShader.uniforms.dieSpeed.value = settings.dieSpeed * deltaRatio;
         _positionShader.uniforms.radius.value = settings.radius;
         _positionShader.uniforms.curlSize.value = settings.curlSize;
+////////////////////////////////////////////////////////////
+        //follow mouse or not
+        //console.log(settings.attraction);
+////////////////////////////////////////////////////////////
         _positionShader.uniforms.attraction.value = settings.attraction;
+        _positionShader.uniforms.attraction.value = settings.attraction;
+
         _positionShader.uniforms.initAnimation.value = exports.initAnimation;
 ////////////////////////////////////////////////////////////
         //follow mouse or not
+////////////////////////////////////////////////////////////
         if(settings.followMouse) {
             _positionShader.uniforms.mouse3d.value.copy(settings.mouse3d);
 

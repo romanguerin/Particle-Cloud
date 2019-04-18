@@ -141,7 +141,7 @@ function position(){
         }
     }
     // if distance is bigger than 50 start tracing
-    else if (d >= 50){
+    else if (d >= 55){
         begin = true;
         //update
         remap();
