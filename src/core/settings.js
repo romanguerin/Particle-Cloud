@@ -37,8 +37,12 @@ exports.shadowDarkness = 0.45;
 
 // start collor
 exports.bgColor = '#ffffff';
-exports.color1 = '#0087ff';
+exports.color1 = rgbaColor;
 exports.color2 = '#bdeef5';
+
+
+//backupcolor
+//exports.color1 = '#0087ff';
 
 exports.fxaa = true;
 var motionBlurQualityMap = exports.motionBlurQualityMap = {

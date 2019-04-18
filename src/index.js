@@ -201,11 +201,9 @@ function _onKeyUp(evt) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////
                                     /*follow part*/
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-//just trydsad
-//window.setInterval(frame, 25);
 
 function repeat() {
-    // Do whatever
+    // do something every frame
     frame();
     requestAnimationFrame(repeat);
 }
@@ -217,7 +215,7 @@ function frame(){
     settings.followMouse = begin;
     settings.radius = camDis;
 }
-
+//end folow
 
 function _onResize() {
     _width = window.innerWidth;
