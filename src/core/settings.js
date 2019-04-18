@@ -37,7 +37,7 @@ exports.attraction = 1;
 exports.shadowDarkness = 0.45;
 
 // start collor
-exports.bgColor = '#ffffff';
+exports.bgColor = '#2f5063';
 exports.color1 = rgbaColor;
 exports.color2 = '#bdeef5';
 

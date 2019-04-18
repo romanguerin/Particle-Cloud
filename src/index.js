@@ -214,6 +214,10 @@ function frame(){
     settings.mouse.y = remapY;
     settings.followMouse = begin;
     settings.radius = camDis;
+    settings.attraction = att;
+    settings.speed = parSpeed;
+    settings.curlSize = curl;
+    settings.dieSpeed = parDead;
 }
 //end folow
 

@@ -8,6 +8,13 @@ let rgbaColor,
     bColor,
     aColor;
 
+let att = -1.8;
+
+let curl = 0.015;
+let parDead = 0.02;
+let parSpeed = 1;
+
+
 colorize();
 //init every frame
 function repeatSelf() {
@@ -37,6 +44,10 @@ function detect(){
         rgbaColor = 'rgba(' + rColor +","+ gColor +","+ bColor +","+ aColor + ')';
         console.log("true " + rgbaColor);
         bool2 = false;
+        att = 1;
+        curl = 0.025;
+        parDead = 0.02;
+        parSpeed = 0.5;
         }
     }
     else
@@ -47,6 +58,10 @@ function detect(){
         rgbaColor = 'rgba(' + rColor +","+ gColor +","+ bColor +","+ aColor + ')';
         console.log("false " + rgbaColor);
         bool2 = true;
+        att = -1.8;
+        curl = 0.015;
+        parDead = 0.02;
+        parSpeed = 1;
         }
     }
     //console.log(begin);
@@ -72,3 +87,8 @@ function frameColor(){
     }
     rgbaColor = 'rgba(' + rColor +","+ gColor +","+ bColor +","+ aColor + ')';
 }
+
+
+
+// force to left
+// force to right
