@@ -160,6 +160,8 @@ function update(dt) {
             r = 100;
             h = 40;
         }
+        // r = 200
+        // h = 60
 
         var autoClearColor = _renderer.autoClearColor;
         var clearColor = _renderer.getClearColor().getHex();

@@ -28,28 +28,20 @@ let noseX = 0,
     rwristX = 0,
     rwristY = 0;
 
-///////////////////////////////////////////////////////////////////////
-//booleans
-let lBool = false;
-let rBool = false;
 
 // distance X & Y axis
 let rDx,
     lDx,
     rDy,
     lDy;
-///////////////////////////////////////////////////////////////////
 
 
-//window.setInterval(position, 25);
+//window.setInterval(test, 500);
 
 function repeat() {
     // Do whatever
     position();
-    //function
-    detectionX();
-    detectionY();
-    check();
+    outstand();
     //repeat
     requestAnimationFrame(repeat);
 }
@@ -192,50 +184,79 @@ function transform() {
     //frame();
 }
 
+function outstand(){
 
-
-//////////////////////////////////////////////////////////
-            /*Outstanding detection*/
-//////////////////////////////////////////////////////////
-
-function detectionX(){
-
-    //calc X left hand
-    lDx = nX - lX;
-    //cald X right hand
-    rDx = rX - nX;
-    console.log("lDx: " + lDx);
-    console.log("rDx: " + rDx);
-    if (lDx > 75 && rDx > 75){
-        lBool = true;
+    lDx = lwristX - noseX;      //calc X left hand
+    rDx = noseX - rwristX;      //calc X right hand
+    lDy = noseY - lwristY;      //calc Y left hand
+    rDy = noseY - rwristY;      //calc Y right hand
+    //explosion
+    if (lDy > 20 && rDy > 20) {
+        parSpeed = 2;
+        parDead = 0.005;
+        camDis = 2;
+        curl = 0.004;
+        att = -1.3;
     }
+    //left shoot
+    else if (lDx > 45 && rDx < -45) {
+        remapX = remapX - 0.1;
+        parSpeed = 1.5;
+        parDead = 0.02;
+        camDis = 1.9;
+        curl = 0.01;
+        att = -0.5;
+
+    }
+    //right shoot
+    else if (lDx < -45 && rDx > 45) {
+        remapX = remapX + 0.1;
+        parSpeed = 1.5;
+        parDead = 0.02;
+        camDis = 1.9;
+        curl = 0.01;
+        att = -0.5;
+    }
+    // left up
+    else if (lDy > 20 && rDy < -10) {
+        parSpeed = 2.5;
+        parDead = 0.02;
+        camDis = 0.4;
+        curl = 0.01;
+        att = -0.5;
+    }
+    // right up
+    else if (rDy > 20 && lDy < -10) {
+        parSpeed = 2.5;
+        parDead = 0.02;
+        camDis = 2.9;
+        curl = 0.01;
+        att = -0.5;
+    }
+    // right up
+    else if (rDy > -100 && lDy > -100 && lDx < 50 && rDx < 50) {
+        parSpeed = 0.01;
+        parDead = 0.02;
+        camDis = 1.5;
+        curl = 0.01;
+        att = -0.5;
+    }
+    //turn back
+    else {
+        parSpeed = lerp(parSpeed, 1, 0.05);
+        parDead = lerp(parDead, 0.02, 0.002);
+        camDis = lerp(camDis, 1.8, 0.05);
+        curl = lerp(curl, 0.025, 0.002);
+        att = lerp(att, 1, 0.05);
+    }
+
 }
 
-
-function detectionY(){
-
-    //calc Y left hand
-    lDy = nY - lY;
-    //cald Y right hand
-    rDy = nY - rY;
+/*
+function test() {
     console.log("lDy: " + lDy);
     console.log("rDy: " + rDy);
-    if (lDy > 20 && rDy > 20){
-        rBool = true;
-    }
+    console.log("lDx: " + lDx);
+    console.log("rDx: " + rDx);
 }
-
-console.log("left: " + lBool);
-console.log("right: " + rBool);
-
-
-function check() {
-    if (lBool === true && rBool === true) {
-        console.log("!!KABOOM!!")
-    }
-    else(
-        console.log("Anyone There??")
-    )
-
-}
-
+*/
