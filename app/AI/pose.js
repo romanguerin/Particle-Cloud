@@ -28,12 +28,29 @@ let noseX = 0,
     rwristX = 0,
     rwristY = 0;
 
+///////////////////////////////////////////////////////////////////////
+//booleans
+let lBool = false;
+let rBool = false;
+
+// distance X & Y axis
+let rDx,
+    lDx,
+    rDy,
+    lDy;
+///////////////////////////////////////////////////////////////////
+
 
 //window.setInterval(position, 25);
 
 function repeat() {
     // Do whatever
     position();
+    //function
+    detectionX();
+    detectionY();
+    check();
+    //repeat
     requestAnimationFrame(repeat);
 }
 
@@ -123,6 +140,8 @@ function drawKeypoints()  {
                     //get middle area
                      w = noseX - (d/2);
                      h = noseY - (d/2);
+
+                     //console.log(noseX - lwristX);
                 }
             }
         }
@@ -175,5 +194,48 @@ function transform() {
 
 
 
+//////////////////////////////////////////////////////////
+            /*Outstanding detection*/
+//////////////////////////////////////////////////////////
 
+function detectionX(){
+
+    //calc X left hand
+    lDx = nX - lX;
+    //cald X right hand
+    rDx = rX - nX;
+    console.log("lDx: " + lDx);
+    console.log("rDx: " + rDx);
+    if (lDx > 75 && rDx > 75){
+        lBool = true;
+    }
+}
+
+
+function detectionY(){
+
+    //calc Y left hand
+    lDy = nY - lY;
+    //cald Y right hand
+    rDy = nY - rY;
+    console.log("lDy: " + lDy);
+    console.log("rDy: " + rDy);
+    if (lDy > 20 && rDy > 20){
+        rBool = true;
+    }
+}
+
+console.log("left: " + lBool);
+console.log("right: " + rBool);
+
+
+function check() {
+    if (lBool === true && rBool === true) {
+        console.log("!!KABOOM!!")
+    }
+    else(
+        console.log("Anyone There??")
+    )
+
+}
 

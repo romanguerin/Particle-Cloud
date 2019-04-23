@@ -42,12 +42,12 @@ function detect(){
         //rgbaColor = 'rgba(255,0,0,0)';
         rColor = 1; gColor = 1; bColor = 255; aColor = 1;
         rgbaColor = 'rgba(' + rColor +","+ gColor +","+ bColor +","+ aColor + ')';
-        console.log("true " + rgbaColor);
+        //console.log("true " + rgbaColor);
         bool2 = false;
         att = 1;
         curl = 0.025;
         parDead = 0.02;
-        parSpeed = 0.5;
+        parSpeed = 1;
         }
     }
     else
@@ -56,7 +56,7 @@ function detect(){
         //rgbaColor = 'rgba(255,255,255,0)';
         rColor = 1; gColor = 255; bColor = 255; aColor = 1;
         rgbaColor = 'rgba(' + rColor +","+ gColor +","+ bColor +","+ aColor + ')';
-        console.log("false " + rgbaColor);
+        //console.log("false " + rgbaColor);
         bool2 = true;
         att = -1.8;
         curl = 0.015;
@@ -89,6 +89,7 @@ function frameColor(){
 }
 
 
+//detect outstanding
 
-// force to left
-// force to right
+
+
