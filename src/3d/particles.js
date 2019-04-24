@@ -115,18 +115,18 @@ function _createTriangleMesh() {
     var PI = Math.PI;
     var angle = PI * 2 / 3;
     var angles = [
-        Math.sin(angle * 2 + PI),
-        Math.cos(angle * 2 + PI),
+        Math.sin(angle * 2 + PI), //2
+        Math.cos(angle * 3 + PI), //2
         Math.sin(angle + PI),
         Math.cos(angle + PI),
-        Math.sin(angle * 3 + PI),
-        Math.cos(angle * 3 + PI),
-        Math.sin(angle * 2),
-        Math.cos(angle * 2),
+        Math.sin(angle * 4 + PI), //3
+        Math.cos(angle * 3 + PI), //3
+        Math.sin(angle * 2), //2
+        Math.cos(angle * 2), //2
         Math.sin(angle),
         Math.cos(angle),
-        Math.sin(angle * 3),
-        Math.cos(angle * 3)
+        Math.sin(angle * 4), //3
+        Math.cos(angle * 3)  //3
     ]
     var i6, i9;
     for(var i = 0; i < AMOUNT; i++ ) {

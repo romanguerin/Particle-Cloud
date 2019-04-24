@@ -132,7 +132,6 @@ function drawKeypoints()  {
                     //get middle area
                      w = noseX - (d/2);
                      h = noseY - (d/2);
-
                      //console.log(noseX - lwristX);
                 }
             }
@@ -161,7 +160,6 @@ function position(){
 }
 
 
-
 function remap(value, low1, high1, low2, high2) {
     return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }
@@ -185,12 +183,13 @@ function transform() {
 }
 
 function outstand(){
-
     lDx = lwristX - noseX;      //calc X left hand
     rDx = noseX - rwristX;      //calc X right hand
     lDy = noseY - lwristY;      //calc Y left hand
     rDy = noseY - rwristY;      //calc Y right hand
-    //explosion
+    //motions
+    if(begin === true){
+
     if (lDy > 20 && rDy > 20) {
         parSpeed = 2;
         parDead = 0.005;
@@ -201,45 +200,45 @@ function outstand(){
     //left shoot
     else if (lDx > 45 && rDx < -45) {
         remapX = remapX - 0.1;
-        parSpeed = 1.5;
-        parDead = 0.02;
-        camDis = 1.9;
-        curl = 0.01;
-        att = -0.5;
+        parSpeed = lerp(parSpeed, 2.5, 0.05); //particle speed
+        parDead = lerp(parDead, 0.02, 0.002); //particle dead
+        camDis = lerp(camDis, 1.5, 0.05); //ratio size
+        curl = lerp(curl, 0.01, 0.002); //curl size
+        att = lerp(att, -0.5, 0.05); //attraction
 
     }
     //right shoot
     else if (lDx < -45 && rDx > 45) {
         remapX = remapX + 0.1;
-        parSpeed = 1.5;
-        parDead = 0.02;
-        camDis = 1.9;
-        curl = 0.01;
-        att = -0.5;
+        parSpeed = lerp(parSpeed, 1.5, 0.05);
+        parDead = lerp(parDead, 0.02, 0.002);
+        camDis = lerp(camDis, 1.9, 0.05);
+        curl = lerp(curl, 0.01, 0.002);
+        att = lerp(att, -0.5, 0.05);
     }
     // left up
     else if (lDy > 20 && rDy < -10) {
-        parSpeed = 2.5;
-        parDead = 0.02;
-        camDis = 0.4;
-        curl = 0.01;
-        att = -0.5;
+        parSpeed = lerp(parSpeed, 2.5, 0.05);
+        parDead = lerp(parDead, 0.04, 0.002);
+        camDis = lerp(camDis, 0.4, 0.05);
+        curl = lerp(curl, 0.01, 0.002);
+        att = lerp(att, 0.5, 0.05);
     }
     // right up
     else if (rDy > 20 && lDy < -10) {
-        parSpeed = 2.5;
-        parDead = 0.02;
-        camDis = 2.9;
-        curl = 0.01;
-        att = -0.5;
+        parSpeed = lerp(parSpeed, 2.5, 0.05);
+        parDead = lerp(parDead, 0.01, 0.002);
+        camDis = lerp(camDis, 2.9, 0.05);
+        curl = lerp(curl, 0.01, 0.002);
+        att = lerp(att, 0.5, 0.05);
     }
-    // right up
-    else if (rDy > -100 && lDy > -100 && lDx < 50 && rDx < 50) {
-        parSpeed = 0.01;
-        parDead = 0.02;
-        camDis = 1.5;
-        curl = 0.01;
-        att = -0.5;
+    // stand sill
+    else if (rDy > -120 && lDy > -120 && lDx < 70 && rDx < 70) {
+        parSpeed = lerp(parSpeed, 0.01, 0.05);
+        parDead = lerp(parDead, 0.02, 0.002);
+        camDis = lerp(camDis, 1.5, 0.05);
+        curl = lerp(curl, 0.01, 0.002);
+        att = lerp(att, -0.5, 0.05);
     }
     //turn back
     else {
@@ -249,9 +248,8 @@ function outstand(){
         curl = lerp(curl, 0.025, 0.002);
         att = lerp(att, 1, 0.05);
     }
-
+    }
 }
-
 /*
 function test() {
     console.log("lDy: " + lDy);
