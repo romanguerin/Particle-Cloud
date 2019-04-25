@@ -22,7 +22,7 @@ var simulator = require('./3d/simulator');
 var particles = require('./3d/particles');
 var lights = require('./3d/lights');
 var floor = require('./3d/floor');
-
+var sound
 
 var undef;
 var _gui;
