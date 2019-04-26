@@ -22,7 +22,7 @@ var simulator = require('./3d/simulator');
 var particles = require('./3d/particles');
 var lights = require('./3d/lights');
 var floor = require('./3d/floor');
-var sound
+//var sound = require('./sound/sound.js');
 
 var undef;
 var _gui;
@@ -76,6 +76,10 @@ function init() {
 
     _scene = new THREE.Scene();
     _scene.fog = new THREE.FogExp2( settings.bgColor, 0.001 );
+
+    var axesHelper = new THREE.AxisHelper( 50 );
+    _scene.add( axesHelper );
+
 
     _camera = new THREE.PerspectiveCamera( 45, 1, 10, 3000);
     _camera.position.set(300, 60, 300).normalize().multiplyScalar(1000);

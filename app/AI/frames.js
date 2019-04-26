@@ -9,7 +9,7 @@ let rgbaColor,
     aColor;
 
 let att = -1.8;
-
+let xs = 0;
 let curl = 0.015;
 let parDead = 0.02;
 let parSpeed = 1;
@@ -67,24 +67,10 @@ function detect(){
     //console.log(begin);
 }
 
+
 function frameColor(){
-    if (bool1 === true){
-        if (aColor >= 255){
-         bool1 = false;
-        }
-        else {
-            aColor ++;
-            rColor ++;
-        }
-    }
-    else {
-        if (aColor <= 1){
-            bool1 = true;}
-        else {
-            aColor --;
-            rColor --;
-        }
-    }
+    xs ++;
+    rColor = Math.round(Math.sin(xs/128)*128+128);
     rgbaColor = 'rgba(' + rColor +","+ gColor +","+ bColor +","+ aColor + ')';
 }
 
