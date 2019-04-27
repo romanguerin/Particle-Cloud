@@ -13,7 +13,6 @@ let ti = 0; //time reset
 let remapX;
 let remapY;
 let remapD = 1000;
-
 let camDis = 1.8;
 
 let begin = false;
@@ -27,7 +26,6 @@ let noseX = 0,
     lwristY = 0,
     rwristX = 0,
     rwristY = 0;
-
 
 // distance X & Y axis
 let rDx,
@@ -46,8 +44,6 @@ function repeat() {
     requestAnimationFrame(repeat);
 }
 
-
-
 options = {
     imageScaleFactor: 0.3,
     outputStride: 16,
@@ -62,7 +58,6 @@ options = {
         showBoundingBox: true,
     }
 };
-
 
 
 function setup() {
@@ -182,15 +177,32 @@ function transform() {
     //frame();
 }
 
+function parLerp(insSpeed,insDead,insRat,insCurl,insAtt){
+    parSpeed = lerp(parSpeed, insSpeed, 0.05); //particle speed
+    parDead = lerp(parDead, insDead, 0.002); //particle dead
+    camDis = lerp(camDis, insRat, 0.05); //ratio size
+    curl = lerp(curl, insCurl, 0.002); //curl size
+    att = lerp(att, insAtt, 0.05); //attraction
+}
+
 function outstand(){
     lDx = lwristX - noseX;      //calc X left hand
     rDx = noseX - rwristX;      //calc X right hand
     lDy = noseY - lwristY;      //calc Y left hand
     rDy = noseY - rwristY;      //calc Y right hand
+
+    const leftSide   = lDx > 45 && rDx < -45;  //detect when both arms are left
+    const rightSide  = lDx < -45 && rDx > 45;  //detect when both arms are right
+    const doubleUp   = lDy > 20 && rDy > 20;   //detect when both arms are up
+    const leftUp     = lDy > 20 && rDy < -10;  //detect when left is up
+    const rightUp    = rDy > 20 && lDy < -10;  //detect when right is up
+    const standStill = rDy > -120 && lDy > -120 && lDx < 70 && rDx < 70; //both arms under the kin
+
     //motions
     if(begin === true){
 
-    if (lDy > 20 && rDy > 20) {
+    //explosion??
+    if (doubleUp) {
         parSpeed = 2;
         parDead = 0.005;
         camDis = 2;
@@ -198,58 +210,30 @@ function outstand(){
         att = -1.3;
     }
     //left shoot
-    else if (lDx > 45 && rDx < -45) {
-        remapX = remapX - 0.1;
-        parSpeed = lerp(parSpeed, 2.5, 0.05); //particle speed
-        parDead = lerp(parDead, 0.02, 0.002); //particle dead
-        camDis = lerp(camDis, 1.5, 0.05); //ratio size
-        curl = lerp(curl, 0.01, 0.002); //curl size
-        att = lerp(att, -0.5, 0.05); //attraction
-
+    else if (leftSide) {
+        parLerp(2.5,0.02,1.5,0.01,-0.5);
+        //remapX = remapX - 0.1;
     }
-    //right shoot
-    else if (lDx < -45 && rDx > 45) {
-        remapX = remapX + 0.1;
-        parSpeed = lerp(parSpeed, 1.5, 0.05);
-        parDead = lerp(parDead, 0.02, 0.002);
-        camDis = lerp(camDis, 1.9, 0.05);
-        curl = lerp(curl, 0.01, 0.002);
-        att = lerp(att, -0.5, 0.05);
+    else if (rightSide) {
+        parLerp(1.5,0.02,1.9,0.01,-0.5);
+        //remapX = remapX + 0.1;
     }
-    // left up
-    else if (lDy > 20 && rDy < -10) {
-        parSpeed = lerp(parSpeed, 2.5, 0.05);
-        parDead = lerp(parDead, 0.04, 0.002);
-        camDis = lerp(camDis, 0.4, 0.05);
-        curl = lerp(curl, 0.01, 0.002);
-        att = lerp(att, 0.5, 0.05);
+    else if (leftUp) {
+        parLerp(2.5,0.04,0.4,0.01,0.5);
     }
-    // right up
-    else if (rDy > 20 && lDy < -10) {
-        parSpeed = lerp(parSpeed, 2.5, 0.05);
-        parDead = lerp(parDead, 0.01, 0.002);
-        camDis = lerp(camDis, 2.9, 0.05);
-        curl = lerp(curl, 0.01, 0.002);
-        att = lerp(att, 0.5, 0.05);
+    else if (rightUp) {
+        parLerp(2.5,0.01,2.9,0.01,0.5);
     }
-    // stand sill
-    else if (rDy > -120 && lDy > -120 && lDx < 70 && rDx < 70) {
-        parSpeed = lerp(parSpeed, 0.01, 0.05);
-        parDead = lerp(parDead, 0.02, 0.002);
-        camDis = lerp(camDis, 1.5, 0.05);
-        curl = lerp(curl, 0.01, 0.002);
-        att = lerp(att, -0.5, 0.05);
+    else if (standStill) {
+        parLerp(0.01,0.02,1.5,0.01,-0.5);
     }
     //turn back
     else {
-        parSpeed = lerp(parSpeed, 1, 0.05);
-        parDead = lerp(parDead, 0.02, 0.002);
-        camDis = lerp(camDis, 1.8, 0.05);
-        curl = lerp(curl, 0.025, 0.002);
-        att = lerp(att, 1, 0.05);
+        parLerp(1,0.02,1.8,0.025,1);
     }
     }
 }
+
 /*
 function test() {
     console.log("lDy: " + lDy);

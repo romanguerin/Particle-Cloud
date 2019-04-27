@@ -9,7 +9,7 @@ let rgbaColor,
     aColor;
 
 let att = -1.8;
-let xs = 0;
+let xTime = 0;
 let curl = 0.015;
 let parDead = 0.02;
 let parSpeed = 1;
@@ -64,13 +64,12 @@ function detect(){
         parSpeed = 1;
         }
     }
-    //console.log(begin);
 }
 
 
 function frameColor(){
-    xs ++;
-    rColor = Math.round(Math.sin(xs/128)*128+128);
+    xTime ++;
+    rColor = Math.round(Math.sin(xTime/128)*128+128);
     rgbaColor = 'rgba(' + rColor +","+ gColor +","+ bColor +","+ aColor + ')';
 }
 
