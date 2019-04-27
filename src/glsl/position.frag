@@ -16,7 +16,7 @@ uniform vec3 mouse3d;
 void main() {
 
     vec2 uv = gl_FragCoord.xy / resolution.xy;
-    vec3 mouseOffset = mouse3d * vec3(cos(time),sin(time),0.02);
+    vec3 mouseOffset = mouse3d; //* vec3(cos(time),sin(time),0.02);
 
     vec4 positionInfo = texture2D( texturePosition, uv  );
     vec3 position = mix(vec3(0.0, -200.0, 0.0), positionInfo.xyz, smoothstep(0.0, 0.3, initAnimation));

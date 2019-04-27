@@ -77,8 +77,8 @@ function init() {
     _scene = new THREE.Scene();
     _scene.fog = new THREE.FogExp2( settings.bgColor, 0.001 );
 
-    var axesHelper = new THREE.AxisHelper( 50 );
-    _scene.add( axesHelper );
+    //var axesHelper = new THREE.AxisHelper( 50 );
+   // _scene.add( axesHelper );
 
 
     _camera = new THREE.PerspectiveCamera( 45, 1, 10, 3000);
