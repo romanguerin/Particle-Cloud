@@ -22,6 +22,7 @@ function repeatSelf() {
     detect();
     frameColor();
     requestAnimationFrame(repeatSelf);
+    //soundMap();
 }
 //repeat
 requestAnimationFrame(repeatSelf);
