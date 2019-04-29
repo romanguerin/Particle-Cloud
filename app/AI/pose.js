@@ -1,3 +1,5 @@
+//import { test } from '../sound/sound.js';
+
 let video;
 let poseNet;
 let poses = [];
@@ -33,6 +35,15 @@ let rDx,
     rDy,
     lDy;
 
+let soundBool = {
+    doubleUp:   false,
+    leftSide:   false,
+    rightSide:  false,
+    leftUp:     false,
+    rightUp:    false,
+    standStill: false,
+    nothing:    false,
+};
 
 //window.setInterval(test, 500);
 
@@ -185,6 +196,17 @@ function parLerp(insSpeed,insDead,insRat,insCurl,insAtt){
     att = lerp(att, insAtt, 0.05); //attraction
 }
 
+function boolCheck(){
+    soundBool.doubleUp   = false;
+    soundBool.leftUp     = false;
+    soundBool.leftSide   = false;
+    soundBool.rightUp    = false;
+    soundBool.rightSide  = false;
+    soundBool.standStill = false;
+    soundBool.nothing    = false;
+
+}
+
 function outstand(){
     lDx = lwristX - noseX;      //calc X left hand
     rDx = noseX - rwristX;      //calc X right hand
@@ -208,31 +230,46 @@ function outstand(){
         camDis = 2;
         curl = 0.004;
         att = -1.3;
-    }
+        boolCheck();
+        soundBool.doubleUp = true;
+        }
     //left shoot
     else if (leftSide) {
         parLerp(2.5,0.02,1.5,0.01,-0.5);
+        boolCheck();
+        soundBool.leftSide = true;
         //remapX = remapX - 0.1;
-    }
+        }
     else if (rightSide) {
         parLerp(1.5,0.02,1.9,0.01,-0.5);
+        boolCheck();
+        soundBool.leftSide = true;
         //remapX = remapX + 0.1;
-    }
+        }
     else if (leftUp) {
         parLerp(2.5,0.04,0.4,0.01,0.5);
-    }
+        boolCheck();
+        soundBool.leftUp = true;
+        }
     else if (rightUp) {
         parLerp(2.5,0.01,2.9,0.01,0.5);
-    }
+        boolCheck();
+        soundBool.rightUp = true;
+        }
     else if (standStill) {
         parLerp(0.01,0.02,1.5,0.01,-0.5);
-    }
+        boolCheck();
+        soundBool.standStill = true;
+        }
     //turn back
     else {
         parLerp(1,0.02,1.8,0.025,1);
-    }
+        boolCheck();
+        soundBool.nothing = true;
+        }
     }
 }
+
 
 /*
 function test() {
