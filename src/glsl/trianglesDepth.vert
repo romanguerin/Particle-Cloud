@@ -1,3 +1,4 @@
+//triangleDepth.vert
 uniform sampler2D texturePosition;
 
 // varying vec4 vWorldPosition;

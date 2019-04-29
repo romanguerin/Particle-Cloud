@@ -1,3 +1,4 @@
+//trough.frag
 uniform vec2 resolution;
 uniform sampler2D texture;
 

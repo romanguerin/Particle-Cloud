@@ -1,11 +1,8 @@
 // for legacy browsers
 const AudioContext = window.AudioContext || window.webkitAudioContext;
-
 const audioContext = new AudioContext();
-
 // get the audio element
 const audioElement = document.querySelector('audio');
-
 // pass it into the audio context
 const track = audioContext.createMediaElementSource(audioElement);
 const biquadFilter = audioContext.createBiquadFilter();
@@ -19,6 +16,7 @@ function repeatSound() {
     moveSound();
 }
 
+//activate sound only after a while
 function sound(){
     //console.log("can you here me?");
     audioElement.play();
@@ -27,8 +25,9 @@ function sound(){
 
 //gain node
 const gainNode = audioContext.createGain();
-
 gainNode.gain.value = 1.5;
+
+//panner
 const pannerOptions = { pan: 0 };
 const panner = new StereoPannerNode(audioContext, pannerOptions);
 
@@ -50,6 +49,7 @@ function soundMap(){
         }
 }
 
+//detect wich movement you make and manipulate
 function moveSound() {
     if(soundBool.doubleUp === true) {
         biquadFilter.type = "lowpass";
@@ -74,12 +74,11 @@ function moveSound() {
     }
 }
 
-    biquadFilter.frequency.value = 1000;
+//frequence
+biquadFilter.frequency.value = 1000;
+
 //connect
 track.connect(biquadFilter).connect(gainNode).connect(panner).connect(audioContext.destination);
 
-// Manipulate the Biquad filter
-
-//biquadFilter.type = "peaking";
 
 

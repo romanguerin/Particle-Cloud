@@ -1,3 +1,4 @@
+//triangles
 uniform sampler2D texturePosition;
 
 // chunk(shadowmap_pars_vertex);

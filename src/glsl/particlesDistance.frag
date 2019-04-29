@@ -1,3 +1,4 @@
+//particlDistance.frag
 uniform vec3 lightPos;
 varying vec4 vWorldPosition;
 

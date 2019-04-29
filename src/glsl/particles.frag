@@ -1,3 +1,4 @@
+//particles.frag
 // chunk(common);
 // chunk(fog_pars_fragment);
 // chunk(shadowmap_pars_fragment);
