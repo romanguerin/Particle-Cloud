@@ -10,12 +10,16 @@ const trackAudioElement = document.getElementById("track");
 const mainTrack = audioContext.createMediaElementSource(mainAudioElement);
 const ambTrack = audioContext.createMediaElementSource(ambAudioElement);
 const trackTrack = audioContext.createMediaElementSource(trackAudioElement);
+//biQuad
 const biquadFilter = audioContext.createBiquadFilter();
-const audioTime = audioContext.currentTime;
+//gain
+//const audioTime = audioContext.currentTime;
 const gainNode = audioContext.createGain();
 //panner
 const pannerOptions = { pan: 0 };
 const panner = new StereoPannerNode(audioContext, pannerOptions);
+// distortion
+const distortion = audioContext.createWaveShaper();
 
 
 window.setTimeout(sound,100);
@@ -24,57 +28,63 @@ window.setTimeout(sound,100);
 function repeatSound() {
     requestAnimationFrame(repeatSound);
     soundMap();
+    moveSound();
 }
 
 //activate sound only after a while
 function sound(){
+    //play
     mainAudioElement.play();
     trackAudioElement.play();
     ambAudioElement.play();
-    //gainNode.gain.value = 0;
-    gainNode.gain.setValueAtTime(0, audioTime);
+    biquadFilter.type = "lowpass";
+    //repeat
+
     repeatSound();
 }
 
+let gainVol = 0;
+gainNode.gain.value = 0;
 
 function soundMap(){
         if (begin === true) {
             panner.pan.value = remapX.toFixed(2);
-            gainNode.gain.linearRampToValueAtTime(1.0, audioTime + 80.0);
+            gainVol = lerp(gainVol,1,0.02);
+            gainNode.gain.value = gainVol;
             ambAudioElement.pause();
         }
         else {
             panner.pan.value = 0;
-            gainNode.gain.linearRampToValueAtTime(0.0, audioTime + 80.0);
-            //gainNode.gain.linearRampToValueAtTime(0.0, audioTime + 8.0);
-            //gainNode.gain.setValueAtTime(1, audioTime);
-            //gainNode.gain.linearRampToValueAtTime(0.0, audioTime + 8.0);
+            gainVol = lerp(gainVol,0,0.1);
+            gainNode.gain.value = gainVol;
             ambAudioElement.play();
         }
+
+        //console.log(gainNode.gain.value);
 }
 
 //detect wich movement you make and manipulate
 function moveSound() {
     if(soundBool.doubleUp === true) {
-        biquadFilter.type = "allpass";
+        //biquadFilter.type = "allpass";
     }
     else if(soundBool.leftSide === true){
-        biquadFilter.type = "highpass";
+        //biquadFilter.type = "highpass";
     }
     else if(soundBool.rightSide === true){
-        biquadFilter.type = "bandpass";
+        //biquadFilter.type = "bandpass";
     }
     else if(soundBool.leftUp === true){
-        biquadFilter.type = "highshelf";
+        //biquadFilter.type = "highshelf";
     }
     else if(soundBool.rightUp === true){
-        biquadFilter.type = "peaking";
+        //biquadFilter.type = "peaking";
     }
     else if(soundBool.standStill === true){
-        biquadFilter.type = "notch";
+        //biquadFilter.type = "notch";
     }
     else if(soundBool.nothing === true){
-        biquadFilter.type = "lowpass";
+        //biquadFilter.type = "lowpass";
     }
 }
 
@@ -82,7 +92,25 @@ function moveSound() {
 //biquadFilter.frequency.value = 1000;
 //.connect(biquadFilter)
 
+function makeDistortionCurve(amount) {
+    let k = typeof amount === 'number' ? amount : 50,
+        n_samples = 44100,
+        curve = new Float32Array(n_samples),
+        deg = Math.PI / 180,
+        i = 0,
+        x;
+    for ( ; i < n_samples; ++i ) {
+        x = i * 2 / n_samples - 1;
+        curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) );
+    }
+    return curve;
+}
+
+//distortion.curve = makeDistortionCurve(400);
+//distortion.oversample = '4x';
+
+//.connect(biquadFilter)
 //connect
-mainTrack.connect(gainNode).connect(panner).connect(audioContext.destination);
+mainTrack.connect(biquadFilter).connect(gainNode).connect(panner).connect(audioContext.destination);
 ambTrack.connect(audioContext.destination);
 trackTrack.connect(gainNode).connect(audioContext.destination);
