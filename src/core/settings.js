@@ -38,8 +38,8 @@ exports.shadowDarkness = 0.45;
 
 // start collor
 exports.bgColor = '#2f5063';
-exports.color1 = rgbaColor;
-exports.color2 = '#bdeef5';
+exports.color1 = rgbaColor1;
+exports.color2 = rgbaColor2;
 
 
 //backupcolor

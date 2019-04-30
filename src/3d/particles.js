@@ -24,6 +24,7 @@ var TEXTURE_WIDTH = settings.simulatorTextureWidth;
 var TEXTURE_HEIGHT = settings.simulatorTextureHeight;
 var AMOUNT = TEXTURE_WIDTH * TEXTURE_HEIGHT;
 
+
 function init(renderer) {
 
     container = exports.container = new THREE.Object3D();
@@ -232,10 +233,10 @@ function update(dt) {
     _triangleMesh.visible = settings.useTriangleParticles;
     _particleMesh.visible = !settings.useTriangleParticles;
 ////////////////////////////////////////////////////////////////////////////////////////
-    _tmpColor.setStyle(rgbaColor);
+    _tmpColor.setStyle(rgbaColor1);
     _color1.lerp(_tmpColor, 0.05);
 
-    _tmpColor.setStyle(settings.color2);
+    _tmpColor.setStyle(rgbaColor2);
     _color2.lerp(_tmpColor, 0.05);
 /*
     _tmpColor.setStyle(settings.color1);

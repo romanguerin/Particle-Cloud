@@ -8,6 +8,7 @@ uniform vec3 color1;
 uniform vec3 color2;
 
 void main() {
+    //color1 = noise(time/108.0)*208+128;
 
     vec3 outgoingLight = mix(color2, color1, smoothstep(0.0, 0.7, vLife));
 
