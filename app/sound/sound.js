@@ -20,7 +20,10 @@ const pannerOptions = { pan: 0 };
 const panner = new StereoPannerNode(audioContext, pannerOptions);
 // distortion
 const distortion = audioContext.createWaveShaper();
+//compressor
+const compressor = audioContext.createDynamicsCompressor();
 
+let threshold = -10;
 
 window.setTimeout(sound,100);
 
@@ -39,8 +42,16 @@ function sound(){
     ambAudioElement.play();
     biquadFilter.type = "lowpass";
     //repeat
-
+    compress();
     repeatSound();
+}
+
+function compress(){
+    compressor.threshold.setValueAtTime(threshold, audioContext.currentTime);
+    compressor.knee.setValueAtTime(20, audioContext.currentTime);
+    compressor.ratio.setValueAtTime(12, audioContext.currentTime);
+    compressor.attack.setValueAtTime(0.3, audioContext.currentTime);
+    compressor.release.setValueAtTime(0.01, audioContext.currentTime);
 }
 
 let gainVol = 0;
@@ -63,10 +74,16 @@ function soundMap(){
         //console.log(gainNode.gain.value);
 }
 
-//detect wich movement you make and manipulate
+function thresh(threshNumber){
+    threshold = lerp(threshold, threshNumber, 2);
+    compressor.threshold.setValueAtTime(threshold, audioContext.currentTime);
+
+}
+
+//detect which movement you make and manipulate
 function moveSound() {
     if(soundBool.doubleUp === true) {
-        //biquadFilter.type = "allpass";
+        thresh(20);
     }
     else if(soundBool.leftSide === true){
         //biquadFilter.type = "highpass";
@@ -111,6 +128,6 @@ function makeDistortionCurve(amount) {
 
 //.connect(biquadFilter)
 //connect
-mainTrack.connect(biquadFilter).connect(gainNode).connect(panner).connect(audioContext.destination);
+mainTrack.connect(compressor).connect(biquadFilter).connect(gainNode).connect(panner).connect(audioContext.destination);
 ambTrack.connect(audioContext.destination);
 trackTrack.connect(gainNode).connect(audioContext.destination);
