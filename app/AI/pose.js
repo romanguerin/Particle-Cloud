@@ -45,7 +45,7 @@ let soundBool = {
     nothing:    false,
 };
 
-//window.setInterval(test, 500);
+//bwindow.setInterval(test, 500);
 
 function repeat() {
     // Do whatever
@@ -273,11 +273,11 @@ function outstand(){
 }
 
 
-/*
+
 function test() {
     console.log("lDy: " + lDy);
     console.log("rDy: " + rDy);
     console.log("lDx: " + lDx);
     console.log("rDx: " + rDx);
 }
-*/
+

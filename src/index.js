@@ -42,9 +42,6 @@ var _ray = new THREE.Ray();
 var _initAnimation = 0;
 
 var _bgColor;
-var _logo;
-var _instruction;
-var _footerItems;
 
 function init() {
 
@@ -182,49 +179,15 @@ function init() {
         elem.style.color = '#000';
     });
 
-    _logo = document.querySelector('.logo');
-    _instruction = document.querySelector('.instruction');
-    document.querySelector('.footer').style.display = 'block';
-    _footerItems = document.querySelectorAll('.footer span');
 
     window.addEventListener('resize', _onResize);
-    window.addEventListener('keyup', _onKeyUp);
+    //window.addEventListener('keyup', _onKeyUp);
 
     _time = Date.now();
     _onResize();
     _loop();
 
 }
-
-function _onKeyUp(evt) {
-    if(evt.keyCode === 32) {
-        settings.speed = settings.speed === 0 ? 1 : 0;
-        settings.dieSpeed = settings.dieSpeed === 0 ? 0.015 : 0;
-    }
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-                                    /*follow part*/
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function repeat() {
-    // do something every frame
-    frame();
-    requestAnimationFrame(repeat);
-}
-requestAnimationFrame(repeat);
-
-function frame(){
-    settings.mouse.x = remapX;
-    settings.mouse.y = remapY;
-    settings.followMouse = begin;
-    settings.radius = camDis;
-    settings.attraction = att;
-    settings.speed = parSpeed;
-    settings.curlSize = curl;
-    settings.getSide = sideEx;
-    settings.dieSpeed = parDead;
-}
-//end folow
 
 function _onResize() {
     _width = window.innerWidth;
@@ -241,14 +204,26 @@ function _loop() {
     _render(newTime - _time, newTime);
     if(settings.useStats) _stats.end();
     _time = newTime;
+    frame();
 }
 
-
+function frame(){
+    settings.mouse.x = remapX;
+    settings.mouse.y = remapY;
+    settings.followMouse = begin;
+    settings.radius = camDis;
+    settings.attraction = att;
+    settings.speed = parSpeed;
+    settings.curlSize = curl;
+    settings.getSide = sideEx;
+    settings.dieSpeed = parDead;
+}
+//end folow
 function _render(dt, newTime) {
 
     motionBlur.skipMatrixUpdate = !(settings.dieSpeed || settings.speed) && settings.motionBlurPause;
 
-    var ratio;
+    //var ratio;
     _bgColor.setStyle(settings.bgColor);
     var tmpColor = floor.mesh.material.color;
     tmpColor.lerp(_bgColor, 0.05);
@@ -270,28 +245,6 @@ function _render(dt, newTime) {
     _ray.origin.add( _ray.direction.multiplyScalar(distance * 1.0));
     simulator.update(dt);
     particles.update(dt);
-
-    ratio = Math.min((1 - Math.abs(_initAnimation - 0.5) * 2) * 1.2, 1);
-    var blur = (1 - ratio) * 10;
-    _logo.style.display = ratio ? 'block' : 'none';
-    if(ratio) {
-        _logo.style.opacity = ratio;
-        _logo.style.webkitFilter = 'blur(' + blur + 'px)';
-        ratio = (0.8 + Math.pow(_initAnimation, 1.5) * 0.5);
-        if(_width < 580) ratio *= 0.5;
-        _logo.style.transform = 'scale3d(' + ratio + ',' + ratio + ',1)';
-    }
-
-    for(var i = 0, len = _footerItems.length; i < len; i++) {
-        ratio = math.unLerp(0.5 + i * 0.01, 0.6 + i * 0.01, _initAnimation);
-        _footerItems[i].style.transform = 'translate3d(0,' + ((1 - Math.pow(ratio, 3)) * 50) + 'px,0)';
-    }
-
-    ratio = math.unLerp(0.5, 0.6, _initAnimation);
-    if(!settings.isMobile) {
-        _instruction.style.display = ratio ? 'block' : 'none';
-        _instruction.style.transform = 'translate3d(0,' + ((1 - ratio * ratio) * 50) + 'px,0)';
-    }
 
     fxaa.enabled = !!settings.fxaa;
     motionBlur.enabled = !!settings.motionBlur;
