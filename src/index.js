@@ -179,9 +179,21 @@ function init() {
         elem.style.color = '#000';
     });
 
+    //////////////////////////
+    /*
+    let geomtry1 = new THREE.SphereGeometry(1,10,10);
+    let geomtry2 = new THREE.SphereGeometry(1,10,10);
+    let material1 = new THREE.MeshBasicMaterial({color: 0xFFCC00});
+    let material2 = new THREE.MeshBasicMaterial({color: 0xFFCCAA});
+    let mesh1 = new THREE.Mesh(geomtry1, material1);
+    let mesh2 = new THREE.Mesh(geomtry2, material2);
+    mesh1.position.set(settings.mouse3d ,0);
+    mesh2.position.set(settings.mouse3d ,0);
+
+     */
+    /////////////////////////
 
     window.addEventListener('resize', _onResize);
-    //window.addEventListener('keyup', _onKeyUp);
 
     _time = Date.now();
     _onResize();
@@ -208,6 +220,8 @@ function _loop() {
 }
 
 function frame(){
+    //settings.mouse.x = remapX;
+    //settings.mouse.y = remapY;
     settings.mouse.x = remapX;
     settings.mouse.y = remapY;
     settings.followMouse = begin;
@@ -217,6 +231,10 @@ function frame(){
     settings.curlSize = curl;
     settings.getSide = sideEx;
     settings.dieSpeed = parDead;
+    //
+    //mesh1.position.set();
+    //mesh2.position.set();
+    //
 }
 //end folow
 function _render(dt, newTime) {

@@ -20,9 +20,9 @@ const gainNode = audioContext.createGain();
 const pannerOptions = { pan: 0 };
 const panner = new StereoPannerNode(audioContext, pannerOptions);
 // distortion
-const distortion = audioContext.createWaveShaper();
+//const distortion = audioContext.createWaveShaper();
 //compressor
-const compressor = audioContext.createDynamicsCompressor();
+//const compressor = audioContext.createDynamicsCompressor();
 
 //let threshold = -36;
 let freqFill = 350;
@@ -50,7 +50,7 @@ function sound(){
     //repeat
     repeatSound();
 }
-
+/*
 function compress(){
     compressor.threshold.setValueAtTime(threshold, audioContext.currentTime);
     compressor.knee.setValueAtTime(20, audioContext.currentTime);
@@ -58,7 +58,7 @@ function compress(){
     compressor.attack.setValueAtTime(0.3, audioContext.currentTime);
     compressor.release.setValueAtTime(0.0, audioContext.currentTime);
 }
-
+*/
 
 function soundMap(){
         if (begin === true) {
@@ -115,7 +115,7 @@ function moveSound() {
 //frequence
 //biquadFilter.frequency.value = 1000;
 //.connect(biquadFilter)
-
+/*
 function makeDistortionCurve(amount) {
     let k = typeof amount === 'number' ? amount : 50,
         n_samples = 44100,
@@ -129,14 +129,14 @@ function makeDistortionCurve(amount) {
     }
     return curve;
 }
-
+*/
 //distortion.curve = makeDistortionCurve(400);
 //distortion.oversample = '4x';
 
 //connect
 mainTrack
     .connect(biquadFilter)
-    .connect(compressor)
+    //.connect(compressor)
     .connect(gainNode)
     .connect(panner)
     .connect(audioContext.destination);

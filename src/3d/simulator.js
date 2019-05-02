@@ -184,6 +184,7 @@ function update(dt) {
 ////////////////////////////////////////////////////////////
         if(settings.followMouse) {
             _positionShader.uniforms.mouse3d.value.copy(settings.mouse3d);
+            //console.log(settings.mouse3d);
 
         } else {
             _followPointTime += dt * 0.001 * settings.speed;
@@ -193,6 +194,7 @@ function update(dt) {
                 Math.sin(_followPointTime * 1.2) * r //2 change flow
             );
             _positionShader.uniforms.mouse3d.value.lerp(_followPoint, 0.2);
+            //console.log(_followPoint);
         }
 
         // _renderer.setClearColor(0, 0);

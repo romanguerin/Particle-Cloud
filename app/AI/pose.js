@@ -237,13 +237,13 @@ function outstand(){
         }
     //left shoot
     else if (leftSide) {
-        parLerp(2.5,0.02,4.0,1.5,0.01,-0.5);
+        parLerp(2.5,0.02,6.0,1.5,0.01,-0.5);
         boolCheck();
         soundBool.leftSide = true;
         //remapX = remapX - 0.1;
         }
     else if (rightSide) {
-        parLerp(1.5,0.02,-4.0,1.9,0.01,-0.5);
+        parLerp(1.5,0.02,-6.0,1.9,0.01,-0.5);
         boolCheck();
         soundBool.leftSide = true;
         //remapX = remapX + 0.1;
@@ -273,11 +273,11 @@ function outstand(){
 }
 
 
-
+/*
 function test() {
     console.log("lDy: " + lDy);
     console.log("rDy: " + rDy);
     console.log("lDx: " + lDx);
     console.log("rDx: " + rDx);
 }
-
+*/
