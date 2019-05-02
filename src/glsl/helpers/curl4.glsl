@@ -1,9 +1,11 @@
+uniform float getSide;
+
 #pragma glslify: snoise4 = require(./simplexNoiseDerivatives4)
 
 vec3 curl( in vec3 p, in float noiseTime, in float persistence ) {
 
     vec4 xNoisePotentialDerivatives = vec4(0.0);
-    vec4 yNoisePotentialDerivatives = vec4(0.0);
+    vec4 yNoisePotentialDerivatives = vec4(getSide);
     vec4 zNoisePotentialDerivatives = vec4(0.0);
 
     for (int i = 0; i < 3; ++i) {

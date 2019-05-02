@@ -75,7 +75,8 @@ function init(renderer) {
             curlSize: { type: 'f', value: 0 },
             attraction: { type: 'f', value: 0 },
             time: { type: 'f', value: 0 },
-            initAnimation: { type: 'f', value: 0 }
+            initAnimation: { type: 'f', value: 0 },
+            getSide: { type: 'f', value: 0 }
         },
         vertexShader: rawShaderPrefix + shaderParse(glslify('../glsl/quad.vert')),
         fragmentShader: rawShaderPrefix + shaderParse(glslify('../glsl/position.frag')),
@@ -176,6 +177,7 @@ function update(dt) {
         _positionShader.uniforms.radius.value = settings.radius;
         _positionShader.uniforms.curlSize.value = settings.curlSize;
         _positionShader.uniforms.attraction.value = settings.attraction;
+        _positionShader.uniforms.getSide.value = settings.getSide;
         _positionShader.uniforms.initAnimation.value = exports.initAnimation;
 ////////////////////////////////////////////////////////////
         //follow mouse or not

@@ -221,6 +221,7 @@ function frame(){
     settings.attraction = att;
     settings.speed = parSpeed;
     settings.curlSize = curl;
+    settings.getSide = sideEx;
     settings.dieSpeed = parDead;
 }
 //end folow

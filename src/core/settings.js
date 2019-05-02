@@ -35,6 +35,7 @@ exports.curlSize = 0.02;
 //atraction is in here as default
 exports.attraction = 1;
 exports.shadowDarkness = 0.45;
+exports.getSide = 2.0;
 
 // start collor
 exports.bgColor = '#2f5063';
