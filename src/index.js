@@ -79,9 +79,11 @@ function init() {
 
 
     _camera = new THREE.PerspectiveCamera( 45, 1, 10, 3000);
-    _camera.position.set(300, 60, 300).normalize().multiplyScalar(1000);
+    //_camera.position.set(230, 230, 230).normalize().multiplyScalar(1000);
+    _camera.position.set(230, 60, 230).normalize().multiplyScalar(1000);
     settings.camera = _camera;
     settings.cameraPosition = _camera.position;
+
 
     fboHelper.init(_renderer);
     postprocessing.init(_renderer, _scene, _camera);
@@ -94,16 +96,17 @@ function init() {
     _scene.add(lights.mesh);
 
     floor.init(_renderer);
-    floor.mesh.position.y = -100;
+    //floor.mesh.position.y = -100;
+    floor.mesh.position.y = -170;
     _scene.add(floor.mesh);
 
      // max distance is between 250 and 1200
     //_control.maxDistance = 1000;
     //console.log(remapD);
     _control = new OrbitControls( _camera, _renderer.domElement );
-    _control.target.y = 50;
+    _control.target.y = 20;
     //_control.maxDistance = remapD;
-    _control.minPolarAngle = 0.3;
+    _control.minPolarAngle = 0.7;
     _control.maxPolarAngle = Math.PI / 2 - 0.1;
     _control.noPan = true;
     _control.update();
@@ -141,8 +144,8 @@ function init() {
 
     var postprocessingGui = _gui.addFolder('Post-Processing');
     postprocessingGui.add(settings, 'fxaa').listen();
-    motionBlur.maxDistance = 120;
-    motionBlur.motionMultiplier = 7 ;
+    motionBlur.maxDistance = 25;
+    motionBlur.motionMultiplier = 2.0 ;
     motionBlur.linesRenderTargetScale = settings.motionBlurQualityMap[settings.query.motionBlurQuality];
     var motionBlurControl = postprocessingGui.add(settings, 'motionBlur');
     var motionMaxDistance = postprocessingGui.add(motionBlur, 'maxDistance', 1, 300).name('motion distance').listen();
@@ -220,8 +223,11 @@ function _loop() {
 }
 
 function frame(){
-    //settings.mouse.x = remapX;
-    //settings.mouse.y = remapY;
+    let aD = Math.round(Math.hypot(remapX - settings.mouse.x, remapY - settings.mouse.y)*100);
+    settings.lerpSpeed = Math.max(0.001,remap(aD, 0, 30, 0.1, 0.001));
+     //console.log();
+    //console.log(Math.round(Math.hypot(remapX - settings.mouse.x, remapY - settings.mouse.y)*100));
+    //console.log(_camera.position);
     settings.mouse.x = remapX;
     settings.mouse.y = remapY;
     settings.followMouse = begin;
@@ -231,10 +237,15 @@ function frame(){
     settings.curlSize = curl;
     settings.getSide = sideEx;
     settings.dieSpeed = parDead;
+
+    //console.log(_camera.position);
+    //console.log(_control.minPolarAngle);
+
     //
     //mesh1.position.set();
     //mesh2.position.set();
     //
+
 }
 //end folow
 function _render(dt, newTime) {

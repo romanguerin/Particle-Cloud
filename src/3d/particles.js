@@ -233,15 +233,15 @@ function update(dt) {
     _triangleMesh.visible = settings.useTriangleParticles;
     _particleMesh.visible = !settings.useTriangleParticles;
 ////////////////////////////////////////////////////////////////////////////////////////
-    _tmpColor.setStyle(rgbaColor1);
+    _tmpColor.setStyle(rgbaColor);
     _color1.lerp(_tmpColor, 0.05);
+    /*
+        _tmpColor.setStyle(rgbaColor2);
+        _color2.lerp(_tmpColor, 0.05);
+    */
+        _tmpColor.setStyle(settings.color2);
+        _color2.lerp(_tmpColor, 0.05);
 
-    _tmpColor.setStyle(rgbaColor2);
-    _color2.lerp(_tmpColor, 0.05);
-/*
-    _tmpColor.setStyle(settings.color1);
-    _color1.lerp(_tmpColor, 0.05);
-*/
 ////////////////////////////////////////////////////////////////////////////////////////////
     for(var i = 0; i < 2; i++) {
         mesh = _meshes[i];

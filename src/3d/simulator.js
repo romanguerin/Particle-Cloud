@@ -19,6 +19,8 @@ var _camera;
 var _followPoint;
 var _followPointTime = 0;
 
+var _movePoint;
+
 var TEXTURE_WIDTH = exports.TEXTURE_WIDTH = settings.simulatorTextureWidth;
 var TEXTURE_HEIGHT = exports.TEXTURE_HEIGHT = settings.simulatorTextureHeight;
 var AMOUNT = exports.AMOUNT = TEXTURE_WIDTH * TEXTURE_HEIGHT;
@@ -34,6 +36,7 @@ function init(renderer) {
 
     _renderer = renderer;
     _followPoint = new THREE.Vector3();
+    _movePoint = new THREE.Vector3();
 
     var rawShaderPrefix = 'precision ' + renderer.capabilities.precision + ' float;\n';
 
@@ -85,7 +88,9 @@ function init(renderer) {
         depthWrite: false,
         depthTest: false
     });
+    //var mat1 = new THREE.MeshPhongMaterial( { color: 0xffbfff, specular: 0xffaa00, shininess: 100 } );
 
+   // _mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2, 2 ), mat1 );
     _mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2, 2 ), _copyShader );
     _scene.add( _mesh );
 
@@ -182,16 +187,24 @@ function update(dt) {
 ////////////////////////////////////////////////////////////
         //follow mouse or not
 ////////////////////////////////////////////////////////////
-        if(settings.followMouse) {
-            _positionShader.uniforms.mouse3d.value.copy(settings.mouse3d);
-            //console.log(settings.mouse3d);
-
+        if(settings.followMouse && isNaN(settings.lerpSpeed) !== true) {
+            //
+            _followPointTime += dt * 0.001;// * settings.speed;
+            _movePoint.set(
+                Math.cos(_followPointTime) * 50 + settings.mouse3d.x ,
+                Math.cos(_followPointTime * 0.8) * 20  + settings.mouse3d.y, //4 change flow
+                Math.sin(_followPointTime * 0.9) * 50 + settings.mouse3d.z //2 change flow
+            );
+            //console.log(settings.speed);
+            _positionShader.uniforms.mouse3d.value.lerp(_movePoint,settings.lerpSpeed);
+            //_positionShader.uniforms.mouse3d.value.lerp(settings.mouse3d,settings.lerpSpeed);
+            //_positionShader.uniforms.mouse3d.value.copy(settings.mouse3d); //old
         } else {
             _followPointTime += dt * 0.001 * settings.speed;
             _followPoint.set(
                 Math.cos(_followPointTime) * r,
-                Math.cos(_followPointTime * 2.1) * h, //4 change flow
-                Math.sin(_followPointTime * 1.2) * r //2 change flow
+                Math.cos(_followPointTime * 4) * h, //4 change flow
+                Math.sin(_followPointTime * 2) * r //2 change flow
             );
             _positionShader.uniforms.mouse3d.value.lerp(_followPoint, 0.2);
             //console.log(_followPoint);

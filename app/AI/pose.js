@@ -1,4 +1,5 @@
-//import { test } from '../sound/sound.js';
+// Create a KNN classifier
+const knnClassifier = ml5.KNNClassifier();
 
 let video;
 let poseNet;
@@ -11,11 +12,14 @@ let h; //height
 let d; //distance
 
 let ti = 0; //time reset
+let numPer = 1; //check amount of people
+let n = 0;
+//let p = 0;
 
 let remapX;
 let remapY;
-let remapD = 1000;
-let camDis = 1.8;
+let remapD = 1000; //distance remap
+let camDis = 1.8;  //Camera distance
 
 let begin = false;
 
@@ -45,7 +49,10 @@ let soundBool = {
     nothing:    false,
 };
 
-//bwindow.setInterval(test, 500);
+
+window.setInterval(switcher, 3000);
+
+
 
 function repeat() {
     // Do whatever
@@ -100,17 +107,16 @@ function draw() {
 // A function to draw ellipses over the detected keypoints
 function drawKeypoints()  {
     //only the first person he sees
-    if (poses[0]){
-
+    if (poses[n] !== undefined){
+        //console.log(n);
         // Loop through all the poses detected
         for (let i = 0; i < poses.length; i++) {
-
             // For each pose detected, loop through all the keypoints
-            let pose = poses[0].pose,
-                nX = poses[0].pose.keypoints[0].position.x,
-                nY = poses[0].pose.keypoints[0].position.y,
-                eX = poses[0].pose.keypoints[1].position.x,
-                eY = poses[0].pose.keypoints[1].position.y;
+            let pose = poses[n].pose,
+                nX = poses[n].pose.keypoints[0].position.x,
+                nY = poses[n].pose.keypoints[0].position.y,
+                eX = poses[n].pose.keypoints[1].position.x,
+                eY = poses[n].pose.keypoints[1].position.y;
             //lerp to position
             noseX = lerp(noseX, nX, 0.5);
             noseY = lerp(noseY, nY, 0.5);
@@ -118,10 +124,10 @@ function drawKeypoints()  {
             eyelY = lerp(eyelY, eY, 0.5);
 
             //define wrists
-            let lwX = poses[0].pose.keypoints[9].position.x,
-                lwY = poses[0].pose.keypoints[9].position.y,
-                rwX = poses[0].pose.keypoints[10].position.x,
-                rwY = poses[0].pose.keypoints[10].position.y;
+            let lwX = poses[n].pose.keypoints[9].position.x,
+                lwY = poses[n].pose.keypoints[9].position.y,
+                rwX = poses[n].pose.keypoints[10].position.x,
+                rwY = poses[n].pose.keypoints[10].position.y;
             //lerp to positon
             lwristX = lerp(lwristX, lwX, 0.5);
             lwristY = lerp(lwristY, lwY, 0.5);
@@ -144,6 +150,8 @@ function drawKeypoints()  {
         }
     }
 }
+
+
 
 //track position
 function position(){
@@ -181,20 +189,20 @@ function transform() {
     //remapy
     remapY = remap(yTran,0,100,1,-1);
     //console.log("Y: "+ remapY);
-    remapD = remap(d,50,100, 0.2, 3);
+    remapD = remap(d,50,100, 0.2, 1.2);
     camDis = lerp(camDis, remapD, 0.05);
-    camDis = Math.min(camDis, 3);
+    camDis = Math.min(camDis, 1.2);
     camDis = Math.round(camDis * 100)/100 ;
     //frame();
 }
 
 function parLerp(insSpeed,insDead,insSide,insRat,insCurl,insAtt){
-    parSpeed = lerp(parSpeed, insSpeed, 0.05); //particle speed
-    parDead = lerp(parDead, insDead, 0.002); //particle dead
-    sideEx = lerp(sideEx, insSide, 0.002); // L/R
-    camDis = lerp(camDis, insRat, 0.05); //ratio size
-    curl = lerp(curl, insCurl, 0.002); //curl size
-    att = lerp(att, insAtt, 0.05); //attraction
+    parSpeed = lerp(parSpeed, insSpeed, 0.005); //particle speed
+    parDead = lerp(parDead, insDead, 0.0002); //particle dead
+    sideEx = lerp(sideEx, insSide, 0.0002); // L/R
+    camDis = lerp(camDis, insRat, 0.005); //ratio size
+    curl = lerp(curl, insCurl, 0.0002); //curl size
+    att = lerp(att, insAtt, 0.005); //attraction
 }
 
 function boolCheck(){
@@ -214,21 +222,30 @@ function outstand(){
     lDy = noseY - lwristY;      //calc Y left hand
     rDy = noseY - rwristY;      //calc Y right hand
 
-    const leftSide   = lDx > 45 && rDx < -45;  //detect when both arms are left
-    const rightSide  = lDx < -45 && rDx > 45;  //detect when both arms are right
-    const doubleUp   = lDy > 20 && rDy > 20;   //detect when both arms are up
-    const leftUp     = lDy > 20 && rDy < -10;  //detect when left is up
-    const rightUp    = rDy > 20 && lDy < -10;  //detect when right is up
-    const standStill = rDy > -120 && lDy > -120 && lDx < 70 && rDx < 70; //both arms under the kin
+    let rHand = remap(rDx,-500,500,0.0,3);
+    let lHand = remap(lDx,-500,500,0.0,3);
+    let sideHand;
+    if (rHand > lHand){sideHand = rHand * -1;} else {sideHand = lHand;}
+    if (sideHand < 2 && sideHand > -2){sideHand = 0.0;}
+    sideEx = lerp(sideEx, sideHand, 0.02); // L/R
+
+
+    //const leftSide   = lDx > 25 && rDx < -25;  //detect when both arms are left
+    //const rightSide  = lDx < -25 && rDx > 25;  //detect when both arms are right
+    const doubleUp   = lDy > 10 && rDy > 10;   //detect when both arms are up
+    const leftUp     = lDy > 10 && rDy < -5;   //detect when left is up
+    const rightUp    = rDy > 10 && lDy < -5;   //detect when right is up
+    const standStill = rDy > -120 && lDy > -120 && lDx < 70 && rDx < 70 && lDx > 10 && rDx > 10;
+    //both arms under the kin
 
     //motions
     if(begin === true){
 
     //explosion??
     if (doubleUp) {
-        parSpeed = 2;
+        parSpeed = 1.2;
         parDead = 0.005;
-        sideEx = 0.0;
+        //sideEx = 0.0;
         camDis = 2;
         curl = 0.004;
         att = -1.3;
@@ -236,7 +253,7 @@ function outstand(){
         soundBool.doubleUp = true;
         }
     //left shoot
-    else if (leftSide) {
+    /*else if (leftSide) {
         parLerp(2.5,0.02,6.0,1.5,0.01,-0.5);
         boolCheck();
         soundBool.leftSide = true;
@@ -247,7 +264,7 @@ function outstand(){
         boolCheck();
         soundBool.leftSide = true;
         //remapX = remapX + 0.1;
-        }
+        }*/
     else if (leftUp) {
         parLerp(2.5,0.04,0.0,0.4,0.01,0.5);
         boolCheck();
@@ -265,7 +282,7 @@ function outstand(){
         }
     //turn back
     else {
-        parLerp(1,0.02,0.0,1.8,0.025,1);
+        parLerp(0.6,0.02,0.0,0.8,0.025,1);
         boolCheck();
         soundBool.nothing = true;
         }
@@ -280,4 +297,106 @@ function test() {
     console.log("lDx: " + lDx);
     console.log("rDx: " + rDx);
 }
+*/
+//////////////////////////////////KNN CLASSIFIER/////////////////////////////////////////////
+
+
+// Add the current frame from the video to the classifier
+function addExample(label) {
+    // Convert poses results to a 2d array [[score0, x0, y0],...,[score16, x16, y16]]
+    const poseArray = poses[numPer - 1].pose.keypoints.map(p => [p.score, p.position.x, p.position.y]);
+
+    // Add an example with a label to the classifier
+    knnClassifier.addExample(poseArray, label);
+}
+
+// Predict the current frame.
+function classify() {
+        // Get the total number of labels from knnClassifier
+        const numLabels = knnClassifier.getNumLabels();
+        if (numLabels <= 0) {
+            console.error('There is no examples in any label');
+            return;
+        }
+        // Convert poses results to a 2d array [[score0, x0, y0],...,[score16, x16, y16]]
+        const poseArray = poses[numPer - 1].pose.keypoints.map(p => [p.score, p.position.x, p.position.y]);
+
+        // Use knnClassifier to classify which label do these features belong to
+        // You can pass in a callback function `gotResults` to knnClassifier.classify function
+        knnClassifier.classify(poseArray, gotResults);
+}
+
+
+function switcher() {
+    if (numPer !== poses.length) {
+        numPer = poses.length;
+            switch (numPer) {
+                default:
+                    knnClassifier.clearAllLabels();
+                    //addExample('A');
+                    //console.log("nothing");
+                    break;
+                case 1:
+                    addExample('A');
+                    //console.log("Alpha");
+                    classify();
+                    break;
+                case 2:
+                    addExample('B');
+                    //console.log("Bravo");
+                    classify();
+                    break;
+                case 3:
+                    addExample('C');
+                    //console.log("Charlie");
+                    classify();
+                    break;
+                case 4:
+                    addExample('D');
+                    //console.log("Delta");
+                    classify();
+                    break;
+                case 5:
+                    addExample('E');
+                    //console.log("Echo");
+                    classify();
+                    break;
+            }
+        }
+}
+
+// Show the results
+function gotResults(err, result) {
+    // Display any error
+    if (err) {
+        console.error(err);
+    }
+
+    if (result.confidencesByLabel) {
+        //const confidences = result.confidencesByLabel;
+        // result.label is the label that has the highest confidence
+
+        if (result.label) {
+            //console.log(result.label);
+             n = result.label.charCodeAt(0) - 65;
+            //console.log(n);
+            if (poses[n] !== undefined){
+                n = 0;
+            } else {
+                n = result.label.charCodeAt(0) - 65;
+            }
+            //console.log()
+        }
+    }
+}
+
+
+/*
+const leftSide   = lDx > 45 && rDx < -45;  //detect when both arms are left
+const rightSide  = lDx < -45 && rDx > 45;  //detect when both arms are right
+const doubleUp   = lDy > 20 && rDy > 20;   //detect when both arms are up
+const leftUp     = lDy > 20 && rDy < -10;  //detect when left is up
+const rightUp    = rDy > 20 && lDy < -10;  //detect when right is up
+const standStill = rDy > -120 && lDy > -120 && lDx < 70 && rDx < 70 && lDx > 10 && rDx > 10;
+//both arms under the kin
 */

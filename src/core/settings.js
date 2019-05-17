@@ -20,7 +20,7 @@ var amountMap = {
 };
 
 exports.amountList = keys(amountMap);
-query.amount = amountMap[query.amount] ? query.amount : '8k';
+query.amount = amountMap[query.amount] ? query.amount : '252k';
 var amountInfo = amountMap[query.amount];
 exports.simulatorTextureWidth = amountInfo[0];
 exports.simulatorTextureHeight = amountInfo[1];
@@ -28,19 +28,21 @@ exports.simulatorTextureHeight = amountInfo[1];
 exports.useTriangleParticles = true;
 exports.followMouse = false;
 
-exports.speed = 1;
+exports.speed = 0.3;
 exports.dieSpeed = 0.015;
 exports.radius = amountInfo[2];
 exports.curlSize = 0.02;
 //atraction is in here as default
-exports.attraction = 1;
+exports.attraction = 0.8;
 exports.shadowDarkness = 0.45;
-exports.getSide = 2.0;
+exports.getSide = 0.0;
 
 // start collor
-exports.bgColor = '#2f5063';
-exports.color1 = rgbaColor1;
-exports.color2 = rgbaColor2;
+//exports.bgColor = '#2f5063';
+exports.bgColor = '#fffae6';
+exports.color1 = rgbaColor;
+exports.color2 = 'rgba(255,255,255,1)';
+exports.lerpSpeed = 0.1;
 
 
 //backupcolor
