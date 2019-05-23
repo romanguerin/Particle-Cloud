@@ -26,8 +26,8 @@ const panner = new StereoPannerNode(audioContext, pannerOptions);
 
 //let threshold = -36;
 let freqFill = 350;
-let gainVol = 0.1;
-gainNode.gain.value = 0;
+let gainVol = 1;
+gainNode.gain.value = 1;
 
 
 window.setTimeout(sound,400);
@@ -35,20 +35,20 @@ window.setTimeout(sound,400);
 
 function repeatSound() {
     requestAnimationFrame(repeatSound);
-    soundMap();
-    moveSound();
+    //soundMap();
+    //moveSound();
     //compress();
 }
 
 //activate sound only after a while
 function sound(){
     //play
-    mainAudioElement.pause();
+    mainAudioElement.play();
     trackAudioElement.pause();
-    ambAudioElement.play();
+    ambAudioElement.pause();
     biquadFilter.type = "lowpass";
     //repeat
-    repeatSound();
+    //repeatSound();
 }
 /*
 function compress(){
@@ -63,7 +63,7 @@ function compress(){
 function soundMap(){
         if (begin === true) {
             panner.pan.value = remapX.toFixed(2);
-            gainVol = lerp(gainVol,1,0.02);
+            //gainVol = lerp(gainVol,1,0.02);
             gainNode.gain.value = gainVol;
             ambAudioElement.pause();
             trackAudioElement.play();
@@ -105,7 +105,7 @@ function moveSound() {
         //biquadFilter.type = "notch";
     }
     else if(soundBool.nothing === true){
-        frequence(350)
+        frequence(350);
         //biquadFilter.frequency.value = 350;
         //threshold = lerp(threshold,-36.0,1.0);
         //biquadFilter.type = "lowpass";

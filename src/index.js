@@ -22,6 +22,7 @@ var simulator = require('./3d/simulator');
 var particles = require('./3d/particles');
 var lights = require('./3d/lights');
 var floor = require('./3d/floor');
+//const mathjs = require('./utils/mathjs');
 //var sound = require('./sound/sound.js');
 
 var undef;
@@ -42,6 +43,7 @@ var _ray = new THREE.Ray();
 var _initAnimation = 0;
 
 var _bgColor;
+var _aLerp;
 
 function init() {
 
@@ -219,12 +221,12 @@ function _loop() {
     _render(newTime - _time, newTime);
     if(settings.useStats) _stats.end();
     _time = newTime;
-    frame();
+    _frame();
 }
 
-function frame(){
-    let aD = Math.round(Math.hypot(remapX - settings.mouse.x, remapY - settings.mouse.y)*100);
-    settings.lerpSpeed = Math.max(0.001,remap(aD, 0, 30, 0.1, 0.001));
+function _frame(){
+    _aLerp = Math.round(Math.hypot(remapX - settings.mouse.x, remapY - settings.mouse.y)*100);
+    settings.lerpSpeed = Math.max(0.001,remap(_aLerp, 0, 30, 0.1, 0.001));
      //console.log();
     //console.log(Math.round(Math.hypot(remapX - settings.mouse.x, remapY - settings.mouse.y)*100));
     //console.log(_camera.position);

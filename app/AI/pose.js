@@ -6,13 +6,22 @@ let poseNet;
 let poses = [];
 let options;
 
+let curl = 0.015;
+let parDead = 0.02;
+let parSpeed = 1.0;
+let sideEx = 0.0;
+let att = -1.8;
+
+let alertKey = true;
+let naviPose = 0;
+
 
 let w; //width
 let h; //height
 let d; //distance
 
 let ti = 0; //time reset
-let numPer = 1; //check amount of people
+//let numPer = 1; //check amount of people
 let n = 0;
 //let p = 0;
 
@@ -50,16 +59,20 @@ let soundBool = {
 };
 
 
-window.setInterval(switcher, 3000);
+//window.setInterval(switcher, 3000);
 
 
 
 function repeat() {
+        setTimeout( function() {
+    //repeat
+    requestAnimationFrame(repeat);
+        }, 1000 / 30 );
     // Do whatever
     position();
     outstand();
-    //repeat
-    requestAnimationFrame(repeat);
+    switchPose();
+
 }
 
 options = {
@@ -105,9 +118,9 @@ function draw() {
 }
 
 // A function to draw ellipses over the detected keypoints
-function drawKeypoints()  {
+function drawKeypoints() {
     //only the first person he sees
-    if (poses[n] !== undefined){
+    if (poses[n] !== undefined) {
         //console.log(n);
         // Loop through all the poses detected
         for (let i = 0; i < poses.length; i++) {
@@ -142,151 +155,218 @@ function drawKeypoints()  {
                     //distance math round
                     d = Math.round(dist(noseX, noseY, eyelX, eyelY) * 3);
                     //get middle area
-                     w = noseX - (d/2);
-                     h = noseY - (d/2);
-                     //console.log(noseX - lwristX);
+                    w = noseX - (d / 2);
+                    h = noseY - (d / 2);
+                    //console.log(noseX - lwristX);
                 }
             }
         }
+        //console.log(n);
     }
 }
-
 
 
 //track position
-function position(){
-    if (poses[0] === undefined) {
-        ti += 1;
-        // if ti = 400 start own animation
-        if (ti === 400) {
-            begin = false;
-            ti = 0;
-            //camDis = lerp(camDis, 1.7, 0.05);
+    function position() {
+        if (poses[0] === undefined) {
+            ti += 1;
+            // if ti = 400 start own animation
+            if (ti === 400) {
+                begin = false;
+                ti = 0;
+                //camDis = lerp(camDis, 1.7, 0.05);
+            }
+        }
+        // if distance is bigger than 50 start tracing
+        else if (d >= 55) {
+            begin = true;
+            //update
+            remap();
+            transform();
         }
     }
-    // if distance is bigger than 50 start tracing
-    else if (d >= 55){
-        begin = true;
-        //update
-        remap();
-        transform();
+
+
+    function remap(value, low1, high1, low2, high2) {
+        return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
     }
+
+
+    function transform() {
+        let xTran = w / 10.24;
+        let yTran = h / 5.78;
+        //console.log("transform:" + "  x:" + xTran + "  y:" + yTran);
+        //remapx
+        remapX = remap(xTran, 0, 100, 1, -1);
+        //console.log("X: "+ remapX);
+        //remapy
+        remapY = remap(yTran, 0, 100, 1, -1);
+        //console.log("Y: "+ remapY);
+        remapD = remap(d, 50, 100, 0.2, 1.2);
+        camDis = lerp(camDis, remapD, 0.05);
+        camDis = Math.min(camDis, 1.2);
+        camDis = Math.round(camDis * 100) / 100;
+        //frame();
+    }
+
+    function parLerp(insSpeed, insDead, insSide, insRat, insCurl, insAtt) {
+        parSpeed = lerp(parSpeed, insSpeed, 0.05); //particle speed
+        parDead = lerp(parDead, insDead, 0.02); //particle dead
+        sideEx = lerp(sideEx, insSide, 0.02); // L/R
+        camDis = lerp(camDis, insRat, 0.05); //ratio size
+        curl = lerp(curl, insCurl, 0.02); //curl size
+        att = lerp(att, insAtt, 0.05); //attraction
+    }
+
+    function boolCheck() {
+        soundBool.doubleUp = false;
+        soundBool.leftUp = false;
+        soundBool.leftSide = false;
+        soundBool.rightUp = false;
+        soundBool.rightSide = false;
+        soundBool.standStill = false;
+        soundBool.nothing = false;
+
+    }
+
+    function outstand() {
+        lDx = lwristX - noseX;      //calc X left hand
+        rDx = noseX - rwristX;      //calc X right hand
+        lDy = noseY - lwristY;      //calc Y left hand
+        rDy = noseY - rwristY;      //calc Y right hand
+
+        if (alertKey === true) {
+            let rHand = remap(rDx, -500, 500, 0.0, 3);
+            let lHand = remap(lDx, -500, 500, 0.0, 3);
+            let sideHand;
+            if (rHand > lHand) {
+                sideHand = rHand * -1;
+            } else {
+                sideHand = lHand;
+            }
+            if (sideHand < 2 && sideHand > -2) {
+                sideHand = 0.0;
+            }
+            sideEx = lerp(sideEx, sideHand, 0.02); // L/R
+        } else {
+            sideEx = 0.0;
+        }
+
+        //const leftSide   = lDx > 25 && rDx < -25;  //detect when both arms are left
+        //const rightSide  = lDx < -25 && rDx > 25;  //detect when both arms are right
+        const doubleUp = lDy > 10 && rDy > 10;   //detect when both arms are up
+        const leftUp = lDy > 10 && rDy < -5;   //detect when left is up
+        const rightUp = rDy > 10 && lDy < -5;   //detect when right is up
+        const standStill = rDy > -120 && lDy > -120 && lDx < 70 && rDx < 70 && lDx > 10 && rDx > 10;
+        //both arms under the kin
+
+        //motions
+        if (begin === true) {
+
+            if (alertKey === true) {
+
+                //explosion??
+                if (doubleUp) {
+                    parSpeed = 1.2;
+                    parDead = 0.005;
+                    //sideEx = 0.0;
+                    camDis = 2;
+                    curl = 0.004;
+                    att = -1.3;
+                    boolCheck();
+                    soundBool.doubleUp = true;
+                }
+                //left shoot
+                /*else if (leftSide) {
+                    parLerp(2.5,0.02,6.0,1.5,0.01,-0.5);
+                    boolCheck();
+                    soundBool.leftSide = true;
+                    //remapX = remapX - 0.1;
+                    }
+                else if (rightSide) {
+                    parLerp(1.5,0.02,-6.0,1.9,0.01,-0.5);
+                    boolCheck();
+                    soundBool.leftSide = true;
+                    //remapX = remapX + 0.1;
+                    }*/
+                else if (leftUp) {
+                    parLerp(2.5, 0.04, 0.0, 0.4, 0.01, 0.5);
+                    boolCheck();
+                    soundBool.leftUp = true;
+                } else if (rightUp) {
+                    parLerp(2.5, 0.01, 0.0, 2.9, 0.01, 0.5);
+                    boolCheck();
+                    soundBool.rightUp = true;
+                } else if (standStill) {
+                    parLerp(0.01, 0.02, 0.0, 1.5, 0.01, -0.5);
+                    boolCheck();
+                    soundBool.standStill = true;
+                }
+                //turn back
+                else {
+                    parLerp(0.6, 0.02, 0.0, 0.8, 0.025, 1);
+                    boolCheck();
+                    soundBool.nothing = true;
+                }
+            }
+            //else alertKey
+            else {
+                parLerp(0.6, 0.02, 0.0, 0.8, 0.025, 1);
+            }
+        }
 }
 
-
-function remap(value, low1, high1, low2, high2) {
-    return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
-}
-
-
-function transform() {
-    let xTran = w / 10.24;
-    let yTran = h / 5.78;
-    //console.log("transform:" + "  x:" + xTran + "  y:" + yTran);
-    //remapx
-    remapX = remap(xTran,0,100,1,-1);
-    //console.log("X: "+ remapX);
-    //remapy
-    remapY = remap(yTran,0,100,1,-1);
-    //console.log("Y: "+ remapY);
-    remapD = remap(d,50,100, 0.2, 1.2);
-    camDis = lerp(camDis, remapD, 0.05);
-    camDis = Math.min(camDis, 1.2);
-    camDis = Math.round(camDis * 100)/100 ;
-    //frame();
-}
-
-function parLerp(insSpeed,insDead,insSide,insRat,insCurl,insAtt){
-    parSpeed = lerp(parSpeed, insSpeed, 0.005); //particle speed
-    parDead = lerp(parDead, insDead, 0.0002); //particle dead
-    sideEx = lerp(sideEx, insSide, 0.0002); // L/R
-    camDis = lerp(camDis, insRat, 0.005); //ratio size
-    curl = lerp(curl, insCurl, 0.0002); //curl size
-    att = lerp(att, insAtt, 0.005); //attraction
-}
-
-function boolCheck(){
-    soundBool.doubleUp   = false;
-    soundBool.leftUp     = false;
-    soundBool.leftSide   = false;
-    soundBool.rightUp    = false;
-    soundBool.rightSide  = false;
-    soundBool.standStill = false;
-    soundBool.nothing    = false;
-
-}
-
-function outstand(){
-    lDx = lwristX - noseX;      //calc X left hand
-    rDx = noseX - rwristX;      //calc X right hand
-    lDy = noseY - lwristY;      //calc Y left hand
-    rDy = noseY - rwristY;      //calc Y right hand
-
-    let rHand = remap(rDx,-500,500,0.0,3);
-    let lHand = remap(lDx,-500,500,0.0,3);
-    let sideHand;
-    if (rHand > lHand){sideHand = rHand * -1;} else {sideHand = lHand;}
-    if (sideHand < 2 && sideHand > -2){sideHand = 0.0;}
-    sideEx = lerp(sideEx, sideHand, 0.02); // L/R
-
-
-    //const leftSide   = lDx > 25 && rDx < -25;  //detect when both arms are left
-    //const rightSide  = lDx < -25 && rDx > 25;  //detect when both arms are right
-    const doubleUp   = lDy > 10 && rDy > 10;   //detect when both arms are up
-    const leftUp     = lDy > 10 && rDy < -5;   //detect when left is up
-    const rightUp    = rDy > 10 && lDy < -5;   //detect when right is up
-    const standStill = rDy > -120 && lDy > -120 && lDx < 70 && rDx < 70 && lDx > 10 && rDx > 10;
-    //both arms under the kin
-
-    //motions
-    if(begin === true){
-
-    //explosion??
-    if (doubleUp) {
-        parSpeed = 1.2;
-        parDead = 0.005;
-        //sideEx = 0.0;
-        camDis = 2;
-        curl = 0.004;
-        att = -1.3;
-        boolCheck();
-        soundBool.doubleUp = true;
-        }
-    //left shoot
-    /*else if (leftSide) {
-        parLerp(2.5,0.02,6.0,1.5,0.01,-0.5);
-        boolCheck();
-        soundBool.leftSide = true;
-        //remapX = remapX - 0.1;
-        }
-    else if (rightSide) {
-        parLerp(1.5,0.02,-6.0,1.9,0.01,-0.5);
-        boolCheck();
-        soundBool.leftSide = true;
-        //remapX = remapX + 0.1;
-        }*/
-    else if (leftUp) {
-        parLerp(2.5,0.04,0.0,0.4,0.01,0.5);
-        boolCheck();
-        soundBool.leftUp = true;
-        }
-    else if (rightUp) {
-        parLerp(2.5,0.01,0.0,2.9,0.01,0.5);
-        boolCheck();
-        soundBool.rightUp = true;
-        }
-    else if (standStill) {
-        parLerp(0.01,0.02,0.0,1.5,0.01,-0.5);
-        boolCheck();
-        soundBool.standStill = true;
-        }
-    //turn back
-    else {
-        parLerp(0.6,0.02,0.0,0.8,0.025,1);
-        boolCheck();
-        soundBool.nothing = true;
+document.addEventListener('keydown', function(e) {
+    if (e.keyCode === 32 || e.keyCode === 9){
+        e.keypress = '1';
+        if (alertKey === false) {
+            alertKey = true;
+            alert("Poses are activated");
+        } else {
+            alert("Poses are deactivated");
+            alertKey = false;
         }
     }
+    if (alertKey === false) {
+        naviPose = e.which - 49;
+   //console.log(e.which - 49);
+    }
+});
+
+//color with sin
+function switchPose(){
+    //console.log(c);
+    if (alertKey === false) {
+        switch (naviPose) {
+            case 0:
+                parLerp(0.6, 0.02, 0.0, 0.8, 0.025, 1);
+                break;
+            case 1:
+                parLerp(2.5, 0.04, 0.0, 0.4, 0.01, 0.5);
+                break;
+            case 2:
+                parLerp(2.5, 0.01, 0.0, 2.9, 0.01, 0.5);
+                break;
+            case 3:
+                parLerp(0.01, 0.02, 0.0, 1.5, 0.01, -0.5);
+                break;
+            case 4:
+                parSpeed = 1.2;
+                parDead = 0.005;
+                //sideEx = 0.0;
+                camDis = 2;
+                curl = 0.004;
+                att = -1.3;
+                break;
+            case 5:
+                parLerp(0.0, 0.0, 0.0, 0.0, 0.0, -1);
+                break;
+        }
+    }
+
+    //cos(x)/2+0.5
+    //blend1 = blendHexColors(color3, color1, p);
+    //console.log(p);
 }
 
 
@@ -300,7 +380,7 @@ function test() {
 */
 //////////////////////////////////KNN CLASSIFIER/////////////////////////////////////////////
 
-
+/*
 // Add the current frame from the video to the classifier
 function addExample(label) {
     // Convert poses results to a 2d array [[score0, x0, y0],...,[score16, x16, y16]]

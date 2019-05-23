@@ -40,7 +40,7 @@ exports.getSide = 0.0;
 // start collor
 //exports.bgColor = '#2f5063';
 exports.bgColor = '#fffae6';
-exports.color1 = rgbaColor;
+exports.color1 = '#fffae6';
 exports.color2 = 'rgba(255,255,255,1)';
 exports.lerpSpeed = 0.1;
 
