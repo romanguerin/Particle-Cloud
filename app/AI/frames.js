@@ -78,7 +78,7 @@ function lid() {
 //color with sin
 function frameColor(){
     //console.log(c);
-    if (alertKey === false) {
+    if (alertKey === true) {
         switch (c) {
             case 0:
                 blend1 = blendHexColors(color3, color9, p);
@@ -95,30 +95,31 @@ function frameColor(){
     }
     else {
         console.log(naviPose);
-        let mc = colorOn[naviPose];
-        console.log(mc);
+        //let mc = colorOn[naviPose];
+        //console.log(mc);
 
 
         switch (naviPose) {
             case 0:
-                blend1 = blendHexColors(color3, color9, p);
+                blend1 = color4;
                 break;
             case 1:
-                blend1 = blendHexColors(color9, color12, p);
+                blend1 = color5;
                 break;
             case 2:
-                blend1 = blendHexColors(color12, color3, p);
+                blend1 = color6;
                 break;
             case 3:
-                blend1 = blendHexColors(color12, color2, p);
+                blend1 = color7;
                 break;
             case 4:
-                blend1 = blendHexColors(color12, color2, p);
+                blend1 = color8;
                 break;
             case 5:
-                blend1 = blendHexColors(color12, color2, p);
-                break;
+                blend1 = color9;
         }
+
+
     }
 
 

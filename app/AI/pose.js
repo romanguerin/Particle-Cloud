@@ -21,7 +21,7 @@ let h; //height
 let d; //distance
 
 let ti = 0; //time reset
-//let numPer = 1; //check amount of people
+let numPer = 1; //check amount of people
 let n = 0;
 //let p = 0;
 
@@ -210,12 +210,12 @@ function drawKeypoints() {
     }
 
     function parLerp(insSpeed, insDead, insSide, insRat, insCurl, insAtt) {
-        parSpeed = lerp(parSpeed, insSpeed, 0.05); //particle speed
-        parDead = lerp(parDead, insDead, 0.02); //particle dead
-        sideEx = lerp(sideEx, insSide, 0.02); // L/R
-        camDis = lerp(camDis, insRat, 0.05); //ratio size
-        curl = lerp(curl, insCurl, 0.02); //curl size
-        att = lerp(att, insAtt, 0.05); //attraction
+        parSpeed = lerp(parSpeed, insSpeed, 0.005); //particle speed
+        parDead = lerp(parDead, insDead, 0.002); //particle dead
+        sideEx = lerp(sideEx, insSide, 0.002); // L/R
+        camDis = lerp(camDis, insRat, 0.005); //ratio size
+        curl = lerp(curl, insCurl, 0.002); //curl size
+        att = lerp(att, insAtt, 0.005); //attraction
     }
 
     function boolCheck() {
@@ -333,6 +333,12 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
+document.addEventListener('keydown', function(e) {
+    if (e.keyCode === 69){
+        alert("You will open a new page");
+        window.open('./script/poseWeb.html');
+    }});
+
 //color with sin
 function switchPose(){
     //console.log(c);
@@ -364,6 +370,8 @@ function switchPose(){
         }
     }
 
+    //window.open('./script/poseWeb.html');
+
     //cos(x)/2+0.5
     //blend1 = blendHexColors(color3, color1, p);
     //console.log(p);
@@ -380,7 +388,7 @@ function test() {
 */
 //////////////////////////////////KNN CLASSIFIER/////////////////////////////////////////////
 
-/*
+
 // Add the current frame from the video to the classifier
 function addExample(label) {
     // Convert poses results to a 2d array [[score0, x0, y0],...,[score16, x16, y16]]

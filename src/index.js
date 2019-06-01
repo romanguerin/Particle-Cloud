@@ -22,6 +22,7 @@ var simulator = require('./3d/simulator');
 var particles = require('./3d/particles');
 var lights = require('./3d/lights');
 var floor = require('./3d/floor');
+//var show = require('../app/AI/show');
 //const mathjs = require('./utils/mathjs');
 //var sound = require('./sound/sound.js');
 
@@ -184,19 +185,7 @@ function init() {
         elem.style.color = '#000';
     });
 
-    //////////////////////////
-    /*
-    let geomtry1 = new THREE.SphereGeometry(1,10,10);
-    let geomtry2 = new THREE.SphereGeometry(1,10,10);
-    let material1 = new THREE.MeshBasicMaterial({color: 0xFFCC00});
-    let material2 = new THREE.MeshBasicMaterial({color: 0xFFCCAA});
-    let mesh1 = new THREE.Mesh(geomtry1, material1);
-    let mesh2 = new THREE.Mesh(geomtry2, material2);
-    mesh1.position.set(settings.mouse3d ,0);
-    mesh2.position.set(settings.mouse3d ,0);
 
-     */
-    /////////////////////////
 
     window.addEventListener('resize', _onResize);
 
@@ -214,6 +203,24 @@ function _onResize() {
 
 }
 
+//////////////////////////
+/*
+let geomtry1 = new THREE.SphereGeometry(1,10,10);
+let geomtry2 = new THREE.SphereGeometry(1,10,10);
+let material1 = new THREE.MeshBasicMaterial({color: 0xFFCC00});
+let material2 = new THREE.MeshBasicMaterial({color: 0xFFCCAA});
+let mesh1 = new THREE.Mesh(geomtry1, material1);
+let mesh2 = new THREE.Mesh(geomtry2, material2);
+*/
+
+/////////////////////////
+
+
+//function _human(){
+//    mesh1.position.set(settings.mouse3d ,0);
+ //   mesh2.position.set(settings.mouse3d ,0);
+//}
+
 function _loop() {
     var newTime = Date.now();
     raf(_loop);
@@ -222,6 +229,7 @@ function _loop() {
     if(settings.useStats) _stats.end();
     _time = newTime;
     _frame();
+    //_human();
 }
 
 function _frame(){
