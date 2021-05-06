@@ -23,7 +23,7 @@
     "stats.js": "mrdoob/stats.js",
     "three": "file:./src/libs/global_three/",
     "uglify-es": "github:mishoo/UglifyJS2#harmony",
-    "underscore": "^1.8.3",
+    "underscore": "^1.12.1",
     "ws": "^6.2.0"
   },
   "devDependencies": {
