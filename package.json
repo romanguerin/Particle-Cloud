@@ -13,7 +13,7 @@
     "glsl-noise": "^0.0.0",
     "glsl-random": "^0.0.5",
     "incremental-convex-hull": "^1.0.1",
-    "mathjs": "^5.10.3",
+    "mathjs": "^7.5.1",
     "min-signal": "^0.0.5",
     "mout": "0.11",
     "quick-loader": "^0.1.4",
