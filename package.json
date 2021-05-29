@@ -24,7 +24,7 @@
     "three": "file:./src/libs/global_three/",
     "uglify-es": "github:mishoo/UglifyJS2#harmony",
     "underscore": "^1.8.3",
-    "ws": "^6.2.0"
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "browserify": "^13.0.0",
